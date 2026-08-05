@@ -78,7 +78,8 @@ jobs:
           cache-on-failure: true
 
       - name: cargo fmt
-        run: cargo fmt --all -- --check
+        # Only this package — do not reformat path-dep luminat sources
+        run: cargo fmt -p lri-drop -- --check
 
       - name: cargo clippy
         # --no-deps: only lint this app, not luminat path deps
