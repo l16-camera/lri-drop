@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LRI Drop — Light Raw → Adobe DNG</title>
+    <meta
+      name="description"
+      content="Desktop app for Light L16: drop .lri captures, pull from camera over adb, export per-module Adobe DNG — including mono A2/C6."
+    />
+    <meta property="og:title" content="LRI Drop — Light Raw → Adobe DNG" />
+    <meta
+      property="og:description"
+      content="Drag-and-drop LRI conversion for Light L16. Camera pull, mono-only export, queue with progress."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Outfit:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="sky" aria-hidden="true">
+      <div class="celestial">
+        <div class="sun"></div>
+        <div class="moon"></div>
+      </div>
+      <div class="stars"></div>
+      <div class="haze"></div>
+    </div>
+
+    <header class="nav">
+      <a class="brand" href="#top">
+        <span class="mark" aria-hidden="true">
+          <span class="mark-ring"></span>
+          <span class="mark-core">16</span>
+        </span>
+        <span>
+          <strong>LRI Drop</strong>
+          <small>Light · luminat</small>
+        </span>
+      </a>
+
+      <nav class="nav-links" aria-label="Page">
+        <a href="#demo">Demo</a>
+        <a href="#how">How it works</a>
+        <a href="#features">Features</a>
+      </nav>
+
+      <div class="nav-end">
+        <button
+          type="button"
+          class="theme-toggle"
+          id="themeToggle"
+          aria-label="Toggle day and night theme"
+          title="Day / night"
+        >
+          <span class="theme-icon sun-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="theme-icon moon-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 7 7 0 1 0 20 14.5z" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="theme-knob"></span>
+        </button>
+        <a class="btn ghost" href="https://github.com/l16-camera/lri-drop">GitHub</a>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <p class="eyebrow">Tauri 2 · Svelte 5 · open L16 tooling</p>
+        <h1>
+          Drop a Light capture.<br />
+          <em>Walk away with DNG.</em>
+        </h1>
+        <p class="lede">
+          LRI Drop is a small desktop converter for <strong>Light L16</strong>
+          <code>.lri</code> files. It inspects modules, pulls shots from the camera
+          over <code>adb</code>, and writes per-module Adobe DNG — full set or mono
+          only (A2 / C6) with optional PNG previews.
+        </p>
+        <div class="hero-cta">
+          <a class="btn primary" href="https://github.com/l16-camera/lri-drop#setup">Get the app</a>
+          <a class="btn ghost" href="#demo">Try the UI demo</a>
+        </div>
+        <ul class="hero-meta">
+          <li><span>Format</span> .lri → .dng</li>
+          <li><span>Camera</span> USB + adb pull</li>
+          <li><span>Stack</span> luminat / light</li>
+        </ul>
+      </section>
+
+      <section class="demo" id="demo" aria-labelledby="demo-title">
+        <div class="section-head">
+          <h2 id="demo-title">Interactive shell</h2>
+          <p>
+            Same controls as the desktop app — toggles, queue cards, progress.
+            Theme switch uses sun / moon so you can see day and night chrome
+            before you clone the repo.
+          </p>
+        </div>
+
+        <div class="demo-stage">
+          <div class="app-window" role="region" aria-label="LRI Drop UI demo">
+            <div class="titlebar">
+              <div class="traffic" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <span class="titlebar-label">LRI Drop</span>
+              <button type="button" class="title-theme" id="demoThemeHint" tabindex="-1" aria-hidden="true">
+                <span class="sun-glyph">☀</span>
+                <span class="moon-glyph">☾</span>
+              </button>
+            </div>
+
+            <div class="app-body">
+              <header class="app-top">
+                <div class="app-brand">
+                  <div class="mark sm" aria-hidden="true">
+                    <span class="mark-ring"></span>
+                    <span class="mark-core">16</span>
+                  </div>
+                  <div>
+                    <strong>LRI Drop</strong>
+                    <p>Light Raw → DNG · drop or from camera</p>
+                  </div>
+                </div>
+                <div class="app-actions">
+                  <button type="button" class="cam-pill online" id="camPill">
+                    <span class="cam-dot"></span>
+                    Light L16
+                  </button>
+                  <button type="button" class="ghost-pill">Exports</button>
+                </div>
+              </header>
+
+              <div
+                class="dropzone"
+                id="dropzone"
+                tabindex="0"
+                role="button"
+                aria-label="Demo drop zone — click to add a sample file"
+              >
+                <div class="orbit" aria-hidden="true">
+                  <span class="ring" style="--i: 0"></span>
+                  <span class="ring" style="--i: 1"></span>
+                  <span class="ring" style="--i: 2"></span>
+                </div>
+                <div class="drop-inner">
+                  <div class="icon-stack" id="iconStack">
+                    <div class="file-ghost g1"></div>
+                    <div class="file-ghost g2"></div>
+                    <div class="file-main">.lri</div>
+                  </div>
+                  <h3 id="dropTitle">Drop .lri files here</h3>
+                  <p class="hint">
+                    or <button type="button" class="inline-link" id="addSample">add sample shot</button>
+                    · mono as <code>A2_mono.dng</code>
+                  </p>
+                </div>
+              </div>
+
+              <form class="controls" id="exportForm" onsubmit="return false;">
+                <label class="toggle">
+                  <input type="checkbox" name="onlyMono" id="onlyMono" />
+                  <span class="track"><span class="knob"></span></span>
+                  <span>Mono only (A2 / C6)</span>
+                </label>
+                <label class="toggle">
+                  <input type="checkbox" name="monoPreviews" id="monoPreviews" checked />
+                  <span class="track"><span class="knob"></span></span>
+                  <span>Mono PNG previews</span>
+                </label>
+                <div class="spacer"></div>
+                <button type="button" class="primary" id="convertBtn" disabled>Convert</button>
+              </form>
+
+              <div class="queue" id="queue">
+                <p class="empty" id="queueEmpty">Queue empty — drop files or open camera</p>
+                <div class="queue-live" id="queueLive" hidden>
+                  <div class="queue-head">
+                    <span id="queueCount">0 files</span>
+                    <span class="stats" id="queueStats"></span>
+                    <button type="button" class="link" id="clearDone" hidden>Clear done</button>
+                  </div>
+                  <ul class="cards" id="cards"></ul>
+                </div>
+              </div>
+
+              <footer class="app-foot">luminat · isamarin × BLMK · demo shell</footer>
+            </div>
+          </div>
+
+          <aside class="demo-note">
+            <h3>What this demo shows</h3>
+            <ol>
+              <li>Click the drop zone or “add sample shot”.</li>
+              <li>Flip <strong>Mono only</strong> / previews — same form as the app.</li>
+              <li>Hit <strong>Convert</strong> to watch progress cards animate.</li>
+              <li>Toggle sun / moon in the nav to switch day &amp; night chrome.</li>
+            </ol>
+            <p class="aside-muted">
+              Real conversion needs the Tauri build +
+              <a href="https://github.com/isamarin/luminat">luminat</a>
+              <code>light</code> crate. This page is the public face for the product.
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="how" id="how" aria-labelledby="how-title">
+        <div class="section-head">
+          <h2 id="how-title">From capture to DNG</h2>
+          <p>Three short paths into the same queue.</p>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <div class="step-icon" aria-hidden="true">↓</div>
+            <h3>Drop files</h3>
+            <p>
+              Drag <code>.lri</code> onto the window. Each file is inspected for
+              module count, focal length, and mono cameras before it sits ready
+              in the queue.
+            </p>
+          </article>
+          <article class="step">
+            <div class="step-icon" aria-hidden="true">usb</div>
+            <h3>Pull from Light</h3>
+            <p>
+              Connect L16 over USB. LRI Drop lists
+              <code>/sdcard/DCIM/Camera/*.lri</code> via adb, pulls selected
+              shots (with cache), then queues them like local drops.
+            </p>
+          </article>
+          <article class="step">
+            <div class="step-icon" aria-hidden="true">→</div>
+            <h3>Convert</h3>
+            <p>
+              <code>light::extract</code> writes
+              <code>&lt;output&gt;/&lt;stem&gt;/*.dng</code>. Optional mono-only
+              pass keeps A2/C6; PNG previews land under <code>mono/</code>.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="features" id="features" aria-labelledby="feat-title">
+        <div class="section-head">
+          <h2 id="feat-title">Built for L16 workflows</h2>
+          <p>Fast shell around the same library as the fuller Luminat desktop app.</p>
+        </div>
+        <div class="feat-grid">
+          <article>
+            <h3>Per-module DNG</h3>
+            <p>Every optical module becomes its own Adobe DNG for Lightroom, Capture One, or raw pipelines.</p>
+          </article>
+          <article>
+            <h3>Mono A2 / C6</h3>
+            <p>Export only mono channels as <code>A2_mono.dng</code> / <code>C6_mono.dng</code> with optional PNG previews.</p>
+          </article>
+          <article>
+            <h3>Camera queue</h3>
+            <p>adb status pill, remote list modal, multi-select pull, progress events while files move.</p>
+          </article>
+          <article>
+            <h3>Queue with progress</h3>
+            <p>Per-file cards: ready, pulling, running %, done with “open folder”, or error text.</p>
+          </article>
+          <article>
+            <h3>Native shell</h3>
+            <p>Tauri 2 on macOS — drag-drop from Finder, folder picker, reveal in Finder.</p>
+          </article>
+          <article>
+            <h3>Same light crate</h3>
+            <p>Parsing and extract come from luminat’s open <code>light</code> library — not a black-box converter.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="compare" aria-labelledby="cmp-title">
+        <div class="section-head">
+          <h2 id="cmp-title">LRI Drop vs Luminat</h2>
+          <p>Same library, different product shells.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>LRI Drop</th>
+                <th>Luminat</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Focus</th>
+                <td>Fast LRI → DNG</td>
+                <td>Full desktop “own Lumen”</td>
+              </tr>
+              <tr>
+                <th scope="row">Fusion / render</th>
+                <td>—</td>
+                <td>libcp quality render</td>
+              </tr>
+              <tr>
+                <th scope="row">Camera (adb)</th>
+                <td>Yes</td>
+                <td>Yes (M2)</td>
+              </tr>
+              <tr>
+                <th scope="row">Best for</th>
+                <td>Batch extract, mono plates</td>
+                <td>Deep L16 studio workflow</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="cta-band">
+        <div>
+          <h2>Clone, link luminat, run.</h2>
+          <p>macOS, Rust, Node 20+, Xcode CLT. <code>adb</code> on PATH for camera features.</p>
+        </div>
+        <pre class="code-block" tabindex="0"><code>git clone https://github.com/l16-camera/lri-drop.git
+cd lri-drop
+./scripts/link-luminat.sh
+npm install
+npm run tauri dev</code></pre>
+      </section>
+    </main>
+
+    <footer class="site-foot">
+      <p>
+        <strong>LRI Drop</strong> · open L16 community tooling ·
+        <a href="https://github.com/isamarin/luminat">luminat</a>
+        · isamarin × BLMK
+      </p>
+      <p class="muted">This page is a static demo for GitHub Pages — not the native app binary.</p>
+    </footer>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
