@@ -1,3 +1,8 @@
+//! LRI Drop — Tauri backend.
+//! Uses public `light` from luminat (extract/inspect) + local `camera` (adb).
+
+mod camera;
+
 use std::path::PathBuf;
 
 use camino::Utf8PathBuf;
@@ -31,9 +36,7 @@ struct PullResult {
 }
 
 struct AppState {
-	/// Last chosen output root (sticky for batch drops).
 	output_root: std::sync::Mutex<Option<String>>,
-	/// Local cache for camera pulls.
 	cache_dir: PathBuf,
 }
 
@@ -41,9 +44,13 @@ impl Default for AppState {
 	fn default() -> Self {
 		Self {
 			output_root: std::sync::Mutex::new(None),
-			cache_dir: light::camera::default_cache_dir(),
+			cache_dir: camera::default_cache_dir(),
 		}
 	}
+}
+
+fn is_mono_sensor(sensor: &str) -> bool {
+	sensor.to_ascii_lowercase().contains("mono")
 }
 
 #[tauri::command]
@@ -75,13 +82,13 @@ fn set_output_root(state: State<'_, AppState>, path: String) {
 }
 
 #[tauri::command]
-fn camera_status() -> light::camera::CameraStatus {
-	light::camera::status()
+fn camera_status() -> camera::CameraStatus {
+	camera::status()
 }
 
 #[tauri::command]
-fn list_camera_lri(serial: Option<String>) -> Result<Vec<light::camera::RemoteLri>, String> {
-	light::camera::list_lri(serial.as_deref())
+fn list_camera_lri(serial: Option<String>) -> Result<Vec<camera::RemoteLri>, String> {
+	camera::list_lri(serial.as_deref())
 }
 
 #[tauri::command]
@@ -99,7 +106,7 @@ async fn pull_camera_lri(
 
 	tauri::async_runtime::spawn_blocking(move || {
 		let (local, from_cache) =
-			light::camera::pull_lri(serial.as_deref(), &remote_path, &cache, size, |note| {
+			camera::pull_lri(serial.as_deref(), &remote_path, &cache, size, |note| {
 				let _ = app2.emit(
 					"convert-progress",
 					ConvertProgress {
@@ -145,15 +152,24 @@ async fn convert_lri(
 	let out_path = Utf8PathBuf::from(&output).join(stem);
 	let file_name = input_path.file_name().unwrap_or("file.lri").to_string();
 
-	let opts = light::extract::ExtractOptions {
-		jobs: None,
-		only_mono,
-		mono_previews,
-	};
+	let summary = light::api::inspect_file(input_path.as_std_path()).map_err(|e| e.to_string())?;
+	let mono_ids: Vec<String> = summary
+		.cameras
+		.iter()
+		.filter(|c| is_mono_sensor(&c.sensor))
+		.map(|c| c.id.clone())
+		.collect();
+
+	if only_mono && mono_ids.is_empty() {
+		return Err("no mono modules (A2/C6) in this file".into());
+	}
 
 	let app2 = app.clone();
 	let file_label = file_name.clone();
-	let report = tauri::async_runtime::spawn_blocking(move || {
+	let out_for_job = out_path.clone();
+	let input_for_job = input_path.clone();
+
+	tauri::async_runtime::spawn_blocking(move || {
 		let _ = app2.emit(
 			"convert-progress",
 			ConvertProgress {
@@ -164,7 +180,8 @@ async fn convert_lri(
 				phase: "start".into(),
 			},
 		);
-		light::extract::run_with_progress(&input_path, &out_path, opts, {
+		// Upstream light API: (input, output, jobs, on_progress) -> Result<()>
+		light::extract::run_with_progress(&input_for_job, &out_for_job, None, {
 			let app3 = app2.clone();
 			let file_label = file_label.clone();
 			move |done, total, camera| {
@@ -181,18 +198,89 @@ async fn convert_lri(
 			}
 		})
 		.map_err(|e| e.to_string())
-		.map(|report| (out_path, report))
 	})
 	.await
 	.map_err(|e| e.to_string())??;
 
-	let (out_path, report) = report;
+	// Collect written DNGs; optionally keep only mono cameras
+	let mut files = Vec::new();
+	if out_path.is_dir() {
+		let rd = std::fs::read_dir(out_path.as_std_path()).map_err(|e| e.to_string())?;
+		for entry in rd.flatten() {
+			let p = entry.path();
+			let name = p
+				.file_name()
+				.and_then(|s| s.to_str())
+				.unwrap_or("")
+				.to_string();
+			if !name.to_ascii_lowercase().ends_with(".dng") {
+				continue;
+			}
+			let cam = name.trim_end_matches(".dng").trim_end_matches(".DNG");
+			// strip _mono suffix if present
+			let cam_id = cam.strip_suffix("_mono").unwrap_or(cam);
+			if only_mono && !mono_ids.iter().any(|m| m == cam_id) {
+				let _ = std::fs::remove_file(&p);
+				continue;
+			}
+			files.push(name);
+		}
+	}
+	files.sort();
+
+	// Optional mono PNG previews via light::thumbnail
+	if mono_previews && !mono_ids.is_empty() {
+		let mono_dir = out_path.join("mono");
+		let _ = std::fs::create_dir_all(mono_dir.as_std_path());
+		if let Ok(session) = light::session::LriSession::open(input_path.as_std_path()) {
+			let _ = session.with_lri(|lri| {
+				for id in &mono_ids {
+					if let Some(cid) = light::thumbnail::parse_camera_id(id) {
+						if let Ok((bytes, w, h, _)) =
+							light::thumbnail::render_preview_gray(lri, cid, 2048)
+						{
+							let path = mono_dir.join(format!("{id}.png"));
+							if let Ok(f) = std::fs::File::create(path.as_std_path()) {
+								let mut enc = png::Encoder::new(f, w, h);
+								enc.set_color(png::ColorType::Grayscale);
+								enc.set_depth(png::BitDepth::Eight);
+								if let Ok(mut wtr) = enc.write_header() {
+									let _ = wtr.write_image_data(&bytes);
+									files.push(format!("mono/{id}.png"));
+								}
+							}
+						}
+					}
+				}
+				Ok::<(), anyhow::Error>(())
+			});
+		}
+	}
+
+	let mono_count = files
+		.iter()
+		.filter(|f| {
+			let base = f
+				.trim_end_matches(".dng")
+				.trim_end_matches(".DNG")
+				.trim_end_matches(".png");
+			let base = base.strip_prefix("mono/").unwrap_or(base);
+			let cam = base.strip_suffix("_mono").unwrap_or(base);
+			mono_ids.iter().any(|m| m == cam)
+		})
+		.count();
+
+	let image_count = files
+		.iter()
+		.filter(|f| f.ends_with(".dng") || f.ends_with(".DNG"))
+		.count();
+
 	let _ = app.emit(
 		"convert-progress",
 		ConvertProgress {
-			file: file_name.clone(),
-			done: report.image_count,
-			total: report.image_count.max(1),
+			file: file_name,
+			done: image_count.max(1),
+			total: image_count.max(1),
 			camera: "done".into(),
 			phase: "done".into(),
 		},
@@ -201,9 +289,9 @@ async fn convert_lri(
 	Ok(ConvertResult {
 		input,
 		output_dir: out_path.to_string(),
-		image_count: report.image_count,
-		mono_count: report.mono_count,
-		files: report.files,
+		image_count,
+		mono_count,
+		files,
 	})
 }
 

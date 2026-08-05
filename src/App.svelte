@@ -193,8 +193,8 @@
                 ...q,
                 status: "ready",
                 focal: summary.focal_length != null ? `${summary.focal_length} mm` : null,
-                hasMono: !!summary.mono?.present,
-                monoCams: summary.mono?.cameras ?? [],
+                hasMono: monoFromSummary(summary).present,
+                monoCams: monoFromSummary(summary).cameras,
                 imageCount: summary.image_count,
               }
             : q,
@@ -209,6 +209,16 @@
     camBusy = false;
     camPanel = false;
     toast(`Added ${picks.length} from camera`);
+  }
+
+  function monoFromSummary(summary) {
+    if (summary.mono?.cameras?.length) {
+      return { present: true, cameras: summary.mono.cameras };
+    }
+    const cameras = (summary.cameras || [])
+      .filter((c) => c.is_mono || (c.sensor || "").toLowerCase().includes("mono"))
+      .map((c) => c.id);
+    return { present: cameras.length > 0, cameras };
   }
 
   async function addPaths(paths) {
@@ -241,8 +251,8 @@
                 ...q,
                 status: "ready",
                 focal: summary.focal_length != null ? `${summary.focal_length} mm` : null,
-                hasMono: !!summary.mono?.present,
-                monoCams: summary.mono?.cameras ?? [],
+                hasMono: monoFromSummary(summary).present,
+                monoCams: monoFromSummary(summary).cameras,
                 imageCount: summary.image_count,
               }
             : q,
