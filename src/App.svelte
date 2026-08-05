@@ -695,7 +695,7 @@
     position: absolute;
     inset: 0;
     border-radius: 14px;
-    background: linear-gradient(135deg, var(--gold), #b87d22);
+    background: linear-gradient(135deg, var(--gold), var(--accent-primary-dim));
     opacity: 0.95;
     box-shadow: 0 8px 28px var(--gold-glow);
   }
@@ -1003,7 +1003,7 @@
   .primary {
     padding: 0.65rem 1.25rem;
     border-radius: 999px;
-    background: linear-gradient(135deg, var(--gold), #c4841f);
+    background: linear-gradient(135deg, var(--gold), var(--accent-primary-dim));
     color: #1a1208;
     font-weight: 700;
     letter-spacing: 0.01em;
@@ -1179,7 +1179,7 @@
     transform-origin: left center;
     transform: scaleX(0);
     border-radius: inherit;
-    background: linear-gradient(90deg, var(--gold), #f0c06a);
+    background: linear-gradient(90deg, var(--gold), var(--accent-primary-hover));
     transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.2, 1);
   }
 

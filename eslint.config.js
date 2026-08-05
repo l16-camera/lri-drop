@@ -50,6 +50,14 @@ export default [
     },
   },
   {
-    ignores: ["dist/**", "src-tauri/target/**", "target/**", "vendor/**", "node_modules/**"],
+    ignores: [
+      "dist/**",
+      "src-tauri/target/**",
+      "target/**",
+      "vendor/**",
+      "third_party/**",
+      "docs/vendor/**",
+      "node_modules/**",
+    ],
   },
 ];

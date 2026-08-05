@@ -1,8 +1,12 @@
 /**
- * LRI Drop landing — theme (sun/moon) + interactive UI shell demo.
+ * LRI Drop landing — CircaHue living accent + interactive UI shell demo.
  */
 
-const THEME_KEY = "lri-drop-theme";
+import {
+  applyCssVars,
+  createLightHueTicker,
+  sampleLightHue,
+} from "./vendor/circahue.js";
 
 /** @typedef {'ready' | 'running' | 'done'} ItemStatus */
 
@@ -20,10 +24,18 @@ const THEME_KEY = "lri-drop-theme";
  * @property {number} [monoCount]
  */
 
+const HUE_OPTS = {
+  latitude: 55.75,
+};
+
 /** @type {QueueItem[]} */
 let queue = [];
 let busy = false;
 let sampleIndex = 0;
+/** @type {number | null} */
+let hourOverride = null;
+/** @type {{ stop: () => void, refresh: () => unknown } | null} */
+let ticker = null;
 
 const samples = [
   {
@@ -59,28 +71,68 @@ function uid() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
-function preferredTheme() {
-  const saved = localStorage.getItem(THEME_KEY);
-  if (saved === "light" || saved === "dark") return saved;
-  return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-}
+/** @param {{ cssVars: Record<string, string>, phaseLabel: string, accent: { hex: string }, hour: number, caption: string }} snap */
+function paintHue(snap) {
+  applyCssVars(document.documentElement, snap.cssVars);
 
-function applyTheme(theme) {
-  document.documentElement.setAttribute("data-theme", theme);
-  localStorage.setItem(THEME_KEY, theme);
-  const btn = document.getElementById("themeToggle");
-  if (btn) {
-    btn.setAttribute(
-      "aria-label",
-      theme === "dark" ? "Switch to day theme" : "Switch to night theme",
-    );
+  const phase = document.getElementById("huePhase");
+  const hex = document.getElementById("hueHex");
+  const caption = document.getElementById("hueCaption");
+  const swatch = document.getElementById("hueSwatch");
+  const titleHue = document.getElementById("titleHue");
+  const hourOut = document.getElementById("hourOut");
+
+  if (phase) phase.textContent = snap.phaseLabel;
+  if (hex) hex.textContent = snap.accent.hex;
+  if (swatch) swatch.style.background = snap.accent.hex;
+  if (titleHue) titleHue.style.background = snap.accent.hex;
+  if (caption) {
+    const mode = hourOverride == null ? "live clock" : `scrub ${snap.hour.toFixed(2)}h`;
+    caption.textContent = `${snap.phaseLabel} · ${snap.accent.hex} · ${mode} · ${snap.caption}`;
+  }
+  if (hourOut && hourOverride == null) {
+    hourOut.textContent = "live";
   }
 }
 
-function toggleTheme() {
-  const next =
-    document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
-  applyTheme(next);
+function sampleNow() {
+  const opts =
+    hourOverride == null
+      ? { ...HUE_OPTS }
+      : { ...HUE_OPTS, hourOverride };
+  return sampleLightHue(opts);
+}
+
+function applyHue() {
+  paintHue(sampleNow());
+}
+
+function startLiveTicker() {
+  ticker?.stop();
+  ticker = createLightHueTicker((snap) => paintHue(snap), {
+    ...HUE_OPTS,
+    intervalMs: 60_000,
+  });
+}
+
+function setHourOverride(/** @type {number | null} */ h) {
+  hourOverride = h;
+  if (h == null) {
+    startLiveTicker();
+    const dial = document.getElementById("hourDial");
+    // Sync slider to current local hour for continuity
+    if (dial instanceof HTMLInputElement) {
+      dial.value = String(sampleLightHue(HUE_OPTS).hour);
+    }
+    const hourOut = document.getElementById("hourOut");
+    if (hourOut) hourOut.textContent = "live";
+  } else {
+    ticker?.stop();
+    ticker = null;
+    const hourOut = document.getElementById("hourOut");
+    if (hourOut) hourOut.textContent = `${h.toFixed(2)}h`;
+    applyHue();
+  }
 }
 
 function renderQueue() {
@@ -107,7 +159,6 @@ function renderQueue() {
   live.hidden = false;
 
   const doneCount = queue.filter((q) => q.status === "done").length;
-  const readyCount = queue.filter((q) => q.status === "ready" || q.status === "done").length;
   const running = queue.some((q) => q.status === "running");
 
   countEl.textContent = `${queue.length} file${queue.length === 1 ? "" : "s"}`;
@@ -163,9 +214,6 @@ function renderQueue() {
   convertBtn.textContent = busy
     ? "Converting…"
     : `Convert ${queue.filter((q) => q.status === "ready").length || ""}`.trim();
-
-  // silence unused
-  void readyCount;
 }
 
 function addSample() {
@@ -173,15 +221,16 @@ function addSample() {
   sampleIndex += 1;
 
   if (queue.some((q) => q.name === template.name && q.status !== "done")) {
-    // allow re-add with suffix
-    const item = {
-      id: uid(),
-      ...template,
-      name: template.name.replace(".lri", `_${sampleIndex}.lri`),
-      status: /** @type {ItemStatus} */ ("ready"),
-      progress: 0,
-    };
-    queue = [...queue, item];
+    queue = [
+      ...queue,
+      {
+        id: uid(),
+        ...template,
+        name: template.name.replace(".lri", `_${sampleIndex}.lri`),
+        status: /** @type {ItemStatus} */ ("ready"),
+        progress: 0,
+      },
+    ];
   } else {
     queue = [
       ...queue,
@@ -257,9 +306,19 @@ function clearDone() {
 }
 
 function init() {
-  applyTheme(preferredTheme());
+  const dial = document.getElementById("hourDial");
+  if (dial instanceof HTMLInputElement) {
+    dial.value = String(sampleLightHue(HUE_OPTS).hour);
+    dial.addEventListener("input", () => {
+      setHourOverride(Number(dial.value));
+    });
+  }
 
-  document.getElementById("themeToggle")?.addEventListener("click", toggleTheme);
+  document.getElementById("hourLive")?.addEventListener("click", () => {
+    setHourOverride(null);
+  });
+
+  startLiveTicker();
 
   const zone = document.getElementById("dropzone");
   zone?.addEventListener("click", (e) => {
@@ -286,18 +345,18 @@ function init() {
   document.getElementById("cards")?.addEventListener("click", (e) => {
     const t = e.target;
     if (!(t instanceof HTMLElement)) return;
-    const removeId = t.getAttribute("data-remove") || t.closest("[data-remove]")?.getAttribute("data-remove");
+    const removeId =
+      t.getAttribute("data-remove") ||
+      t.closest("[data-remove]")?.getAttribute("data-remove");
     if (removeId) {
       removeItem(removeId);
       return;
     }
     if (t.getAttribute("data-reveal")) {
-      // demo only
       t.textContent = "demo — no local folder";
     }
   });
 
-  // prevent form submit if any
   document.getElementById("exportForm")?.addEventListener("submit", (e) => e.preventDefault());
 
   renderQueue();

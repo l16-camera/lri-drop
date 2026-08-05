@@ -23,6 +23,7 @@
     "vite": "^6.2.0"
   },
   "dependencies": {
+    "@igrs/circahue": "file:third_party/circahue",
     "@tauri-apps/api": "^2.6.0",
     "@tauri-apps/plugin-dialog": "^2.6.0"
   }

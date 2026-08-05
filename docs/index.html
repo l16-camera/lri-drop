@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,7 +11,7 @@
     <meta property="og:title" content="LRI Drop — Light Raw → Adobe DNG" />
     <meta
       property="og:description"
-      content="Drag-and-drop LRI conversion for Light L16. Camera pull, mono-only export, queue with progress."
+      content="Drag-and-drop LRI conversion for Light L16. Camera pull, mono-only export, queue with progress. Circadian accent via circahue."
     />
     <meta property="og:type" content="website" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -24,11 +24,6 @@
   </head>
   <body>
     <div class="sky" aria-hidden="true">
-      <div class="celestial">
-        <div class="sun"></div>
-        <div class="moon"></div>
-      </div>
-      <div class="stars"></div>
       <div class="haze"></div>
     </div>
 
@@ -40,7 +35,7 @@
         </span>
         <span>
           <strong>LRI Drop</strong>
-          <small>Light · luminat</small>
+          <small>Light · luminat · circahue</small>
         </span>
       </a>
 
@@ -51,26 +46,14 @@
       </nav>
 
       <div class="nav-end">
-        <button
-          type="button"
-          class="theme-toggle"
-          id="themeToggle"
-          aria-label="Toggle day and night theme"
-          title="Day / night"
-        >
-          <span class="theme-icon sun-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8">
-              <circle cx="12" cy="12" r="4" />
-              <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke-linecap="round" />
-            </svg>
+        <!-- Living accent (circahue) — replaces static brand gold / day-night toggle -->
+        <div class="hue-pill" id="huePill" title="Circadian accent · circahue">
+          <span class="hue-swatch" id="hueSwatch" aria-hidden="true"></span>
+          <span class="hue-meta">
+            <span class="hue-phase" id="huePhase">…</span>
+            <span class="hue-hex" id="hueHex">—</span>
           </span>
-          <span class="theme-icon moon-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 7 7 0 1 0 20 14.5z" stroke-linejoin="round" />
-            </svg>
-          </span>
-          <span class="theme-knob"></span>
-        </button>
+        </div>
         <a class="btn ghost" href="https://github.com/l16-camera/lri-drop">GitHub</a>
       </div>
     </header>
@@ -86,7 +69,9 @@
           LRI Drop is a small desktop converter for <strong>Light L16</strong>
           <code>.lri</code> files. It inspects modules, pulls shots from the camera
           over <code>adb</code>, and writes per-module Adobe DNG — full set or mono
-          only (A2 / C6) with optional PNG previews.
+          only (A2 / C6) with optional PNG previews. Brand chrome follows a
+          <a href="https://github.com/isamarin/circahue">circahue</a> circadian accent
+          (same living light idea as Luminat).
         </p>
         <div class="hero-cta">
           <a class="btn primary" href="https://github.com/l16-camera/lri-drop#setup">Get the app</a>
@@ -95,7 +80,7 @@
         <ul class="hero-meta">
           <li><span>Format</span> .lri → .dng</li>
           <li><span>Camera</span> USB + adb pull</li>
-          <li><span>Stack</span> luminat / light</li>
+          <li><span>Accent</span> circahue</li>
         </ul>
       </section>
 
@@ -104,8 +89,8 @@
           <h2 id="demo-title">Interactive shell</h2>
           <p>
             Same controls as the desktop app — toggles, queue cards, progress.
-            Theme switch uses sun / moon so you can see day and night chrome
-            before you clone the repo.
+            Drag the hour dial to scrub the <strong>circahue</strong> accent through
+            a full day (midnight → zenith → sunset → night).
           </p>
         </div>
 
@@ -116,10 +101,7 @@
                 <span></span><span></span><span></span>
               </div>
               <span class="titlebar-label">LRI Drop</span>
-              <button type="button" class="title-theme" id="demoThemeHint" tabindex="-1" aria-hidden="true">
-                <span class="sun-glyph">☀</span>
-                <span class="moon-glyph">☾</span>
-              </button>
+              <span class="title-hue" id="titleHue" aria-hidden="true"></span>
             </div>
 
             <div class="app-body">
@@ -196,22 +178,43 @@
                 </div>
               </div>
 
-              <footer class="app-foot">luminat · isamarin × BLMK · demo shell</footer>
+              <footer class="app-foot">luminat · circahue · isamarin × BLMK · demo shell</footer>
             </div>
           </div>
 
           <aside class="demo-note">
-            <h3>What this demo shows</h3>
+            <h3>CircaHue accent</h3>
+            <p class="hue-caption" id="hueCaption">Sampling…</p>
+            <label class="hour-dial">
+              <span class="hour-label">
+                Hour scrub
+                <output id="hourOut" for="hourDial">live</output>
+              </span>
+              <input
+                type="range"
+                id="hourDial"
+                min="0"
+                max="24"
+                step="0.25"
+                value="12"
+                aria-label="Override local hour for accent color"
+              />
+              <span class="hour-ticks" aria-hidden="true">
+                <span>0</span><span>6</span><span>12</span><span>18</span><span>24</span>
+              </span>
+            </label>
+            <button type="button" class="link live-btn" id="hourLive">Use live clock</button>
             <ol>
+              <li>Scrub the dial — mark, buttons, and drop rings track the hue.</li>
               <li>Click the drop zone or “add sample shot”.</li>
-              <li>Flip <strong>Mono only</strong> / previews — same form as the app.</li>
-              <li>Hit <strong>Convert</strong> to watch progress cards animate.</li>
-              <li>Toggle sun / moon in the nav to switch day &amp; night chrome.</li>
+              <li>Flip <strong>Mono only</strong> / previews, then <strong>Convert</strong>.</li>
             </ol>
             <p class="aside-muted">
               Real conversion needs the Tauri build +
               <a href="https://github.com/isamarin/luminat">luminat</a>
-              <code>light</code> crate. This page is the public face for the product.
+              <code>light</code>. Accent math is
+              <a href="https://github.com/isamarin/circahue">@igrs/circahue</a>
+              (pure TS, zero DOM deps).
             </p>
           </aside>
         </div>
@@ -276,8 +279,12 @@
             <p>Per-file cards: ready, pulling, running %, done with “open folder”, or error text.</p>
           </article>
           <article>
-            <h3>Native shell</h3>
-            <p>Tauri 2 on macOS — drag-drop from Finder, folder picker, reveal in Finder.</p>
+            <h3>Living accent</h3>
+            <p>
+              UI gold is not a fixed hex —
+              <a href="https://github.com/isamarin/circahue">circahue</a> samples
+              time, season, and latitude into CSS accent vars.
+            </p>
           </article>
           <article>
             <h3>Same light crate</h3>
@@ -317,6 +324,11 @@
                 <td>Yes (M2)</td>
               </tr>
               <tr>
+                <th scope="row">Accent</th>
+                <td>circahue</td>
+                <td>circahue (design origin)</td>
+              </tr>
+              <tr>
                 <th scope="row">Best for</th>
                 <td>Batch extract, mono plates</td>
                 <td>Deep L16 studio workflow</td>
@@ -343,11 +355,13 @@ npm run tauri dev</code></pre>
       <p>
         <strong>LRI Drop</strong> · open L16 community tooling ·
         <a href="https://github.com/isamarin/luminat">luminat</a>
+        ·
+        <a href="https://github.com/isamarin/circahue">circahue</a>
         · isamarin × BLMK
       </p>
       <p class="muted">This page is a static demo for GitHub Pages — not the native app binary.</p>
     </footer>
 
-    <script src="./app.js" defer></script>
+    <script type="module" src="./app.js"></script>
   </body>
 </html>

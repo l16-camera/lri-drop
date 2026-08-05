@@ -3,11 +3,11 @@
 [![CI](https://github.com/l16-camera/lri-drop/actions/workflows/ci.yml/badge.svg)](https://github.com/l16-camera/lri-drop/actions/workflows/ci.yml)
 [![Pages](https://github.com/l16-camera/lri-drop/actions/workflows/pages.yml/badge.svg)](https://github.com/l16-camera/lri-drop/actions/workflows/pages.yml)
 
-**[Live demo / landing →](https://l16-camera.github.io/lri-drop/)** — interactive UI shell, day/night theme, product walkthrough.
+**[Live demo / landing →](https://l16-camera.github.io/lri-drop/)** — interactive UI shell, [circahue](https://github.com/isamarin/circahue) accent dial, product walkthrough.
 
 Desktop **Tauri 2 + Svelte 5** converter for **Light L16**: drop `.lri` captures (or pull over **adb**), inspect modules, export per-module Adobe **DNG** — full set or **mono only** (A2 / C6) with optional PNG previews and a progress queue.
 
-Depends on the **[luminat](https://github.com/isamarin/luminat)** crate `light` (LRI parse/extract).
+Depends on the **[luminat](https://github.com/isamarin/luminat)** crate `light` (LRI parse/extract). Brand chrome uses **[circahue](https://github.com/isamarin/circahue)** (`@igrs/circahue`) for a living circadian accent.
 
 ## Setup
 

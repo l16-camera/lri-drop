@@ -1,4 +1,15 @@
 :root {
+  /* CircaHue writes --accent-primary* / --light-hue-*; fallbacks until first sample. */
+  --accent-primary: #e8a43a;
+  --accent-primary-hover: #f0b850;
+  --accent-primary-dim: #b87d22;
+  --light-hue-rgb: 232, 164, 58;
+  --light-hue-glow-rgb: 232, 164, 58;
+  --light-hue-glow-alpha: 0.18;
+  --light-hue-glow-blur: 28px;
+  --light-hue-ring-rgb: 232, 164, 58;
+  --light-hue-ring-alpha: 0.35;
+
   --bg0: #0c0d10;
   --bg1: #14161b;
   --bg2: #1c1f26;
@@ -6,9 +17,10 @@
   --line: rgba(255, 255, 255, 0.07);
   --text: #f2f3f5;
   --muted: #8b919c;
-  --gold: #e8a43a;
-  --gold-soft: rgba(232, 164, 58, 0.18);
-  --gold-glow: rgba(232, 164, 58, 0.45);
+  /* Brand gold = living circadian accent */
+  --gold: var(--accent-primary);
+  --gold-soft: rgba(var(--light-hue-rgb), 0.18);
+  --gold-glow: rgba(var(--light-hue-glow-rgb), var(--light-hue-glow-alpha));
   --ok: #5dca8a;
   --ok-soft: rgba(93, 202, 138, 0.15);
   --err: #e05c5c;
@@ -35,12 +47,17 @@ body,
 body {
   font-family: var(--font);
   background:
-    radial-gradient(1200px 600px at 50% -10%, rgba(232, 164, 58, 0.09), transparent 55%),
+    radial-gradient(
+      1200px 600px at 50% -10%,
+      rgba(var(--light-hue-glow-rgb), calc(var(--light-hue-glow-alpha) * 0.55)),
+      transparent 55%
+    ),
     radial-gradient(800px 500px at 100% 100%, rgba(74, 168, 216, 0.06), transparent 50%),
     var(--bg0);
   color: var(--text);
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
+  transition: background 0.8s ease;
 }
 
 button {

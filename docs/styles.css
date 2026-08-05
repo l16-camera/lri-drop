@@ -1,6 +1,16 @@
-/* ── Tokens: night (default) & day ───────────────────────────────────── */
-:root,
-[data-theme="dark"] {
+/* ── Tokens: dark chrome + CircaHue accent (live CSS vars) ───────────── */
+:root {
+  /* Fallbacks until circahue paints */
+  --accent-primary: #e8a43a;
+  --accent-primary-hover: #f0b850;
+  --accent-primary-dim: #b87d22;
+  --light-hue-rgb: 232, 164, 58;
+  --light-hue-glow-rgb: 232, 164, 58;
+  --light-hue-glow-alpha: 0.18;
+  --light-hue-glow-blur: 28px;
+  --light-hue-ring-rgb: 232, 164, 58;
+  --light-hue-ring-alpha: 0.35;
+
   --bg0: #0a0b0e;
   --bg1: #12141a;
   --bg2: #1a1d24;
@@ -9,49 +19,18 @@
   --line: rgba(255, 255, 255, 0.08);
   --text: #f2f3f5;
   --muted: #8b919c;
-  --gold: #e8a43a;
-  --gold-soft: rgba(232, 164, 58, 0.18);
-  --gold-glow: rgba(232, 164, 58, 0.4);
+  --gold: var(--accent-primary);
+  --gold-soft: rgba(var(--light-hue-rgb), 0.18);
+  --gold-glow: rgba(var(--light-hue-glow-rgb), var(--light-hue-glow-alpha));
   --ok: #5dca8a;
   --ok-soft: rgba(93, 202, 138, 0.15);
   --err: #e05c5c;
   --sky-top: #0c0d14;
   --sky-bot: #141820;
-  --sun-opacity: 0;
-  --moon-opacity: 1;
-  --stars-opacity: 0.85;
-  --haze: radial-gradient(900px 480px at 70% 8%, rgba(232, 164, 58, 0.12), transparent 55%),
-    radial-gradient(700px 400px at 10% 90%, rgba(74, 168, 216, 0.07), transparent 50%);
   --window-shadow: 0 40px 100px rgba(0, 0, 0, 0.55);
   --font: "Outfit", system-ui, -apple-system, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
   color-scheme: dark;
-}
-
-[data-theme="light"] {
-  --bg0: #f3efe6;
-  --bg1: #fffaf2;
-  --bg2: #f7f1e6;
-  --bg3: #ebe3d4;
-  --surface: rgba(30, 24, 12, 0.03);
-  --line: rgba(40, 30, 12, 0.1);
-  --text: #1a160f;
-  --muted: #6b6458;
-  --gold: #c47a12;
-  --gold-soft: rgba(196, 122, 18, 0.14);
-  --gold-glow: rgba(232, 164, 58, 0.28);
-  --ok: #2f9e5f;
-  --ok-soft: rgba(47, 158, 95, 0.12);
-  --err: #c94444;
-  --sky-top: #9ec8ef;
-  --sky-bot: #f5e6c8;
-  --sun-opacity: 1;
-  --moon-opacity: 0;
-  --stars-opacity: 0;
-  --haze: radial-gradient(800px 420px at 75% 12%, rgba(255, 220, 120, 0.55), transparent 50%),
-    radial-gradient(600px 360px at 15% 80%, rgba(255, 255, 255, 0.4), transparent 55%);
-  --window-shadow: 0 36px 80px rgba(80, 55, 20, 0.18);
-  color-scheme: light;
 }
 
 *,
@@ -108,85 +87,26 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* ── Sky / celestial backdrop ────────────────────────────────────────── */
+/* ── Sky / accent haze ───────────────────────────────────────────────── */
 .sky {
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
   background: linear-gradient(180deg, var(--sky-top), var(--sky-bot));
-  transition: background 0.7s ease;
-}
-
-.celestial {
-  position: absolute;
-  top: 6vh;
-  right: 10vw;
-  width: 120px;
-  height: 120px;
-}
-
-.sun,
-.moon {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  transition:
-    opacity 0.65s ease,
-    transform 0.75s cubic-bezier(0.2, 0.9, 0.2, 1);
-}
-
-.sun {
-  background: radial-gradient(circle at 35% 35%, #fff6c8, #f0c040 45%, #e09020 80%);
-  box-shadow:
-    0 0 40px rgba(255, 200, 80, 0.55),
-    0 0 100px rgba(255, 180, 40, 0.35);
-  opacity: var(--sun-opacity);
-  transform: scale(calc(0.7 + var(--sun-opacity) * 0.3));
-}
-
-.moon {
-  background: radial-gradient(circle at 32% 32%, #f0f2f8, #c8ccd8 55%, #8a90a0 100%);
-  box-shadow: 0 0 48px rgba(180, 200, 255, 0.25);
-  opacity: var(--moon-opacity);
-  transform: scale(calc(0.7 + var(--moon-opacity) * 0.3)) rotate(-12deg);
-}
-
-.moon::after {
-  content: "";
-  position: absolute;
-  width: 28%;
-  height: 28%;
-  border-radius: 50%;
-  background: rgba(120, 128, 145, 0.35);
-  top: 28%;
-  left: 42%;
-  box-shadow:
-    -18px 12px 0 -4px rgba(100, 110, 130, 0.28),
-    14px 22px 0 -6px rgba(100, 110, 130, 0.22);
-}
-
-.stars {
-  position: absolute;
-  inset: 0;
-  opacity: var(--stars-opacity);
-  transition: opacity 0.7s ease;
-  background-image:
-    radial-gradient(1.5px 1.5px at 12% 18%, #fff, transparent),
-    radial-gradient(1px 1px at 28% 42%, #fff, transparent),
-    radial-gradient(1.2px 1.2px at 48% 12%, #fff, transparent),
-    radial-gradient(1px 1px at 72% 28%, #fff, transparent),
-    radial-gradient(1.5px 1.5px at 88% 48%, #fff, transparent),
-    radial-gradient(1px 1px at 64% 68%, #fff, transparent),
-    radial-gradient(1.2px 1.2px at 18% 72%, #fff, transparent),
-    radial-gradient(1px 1px at 40% 88%, #fff, transparent);
 }
 
 .haze {
   position: absolute;
   inset: 0;
-  background: var(--haze);
-  transition: background 0.7s ease;
+  background:
+    radial-gradient(
+      900px 480px at 70% 8%,
+      rgba(var(--light-hue-glow-rgb), calc(var(--light-hue-glow-alpha) * 0.9)),
+      transparent 55%
+    ),
+    radial-gradient(700px 400px at 10% 90%, rgba(74, 168, 216, 0.07), transparent 50%);
+  transition: background 0.55s ease;
 }
 
 /* ── Nav ─────────────────────────────────────────────────────────────── */
@@ -247,8 +167,11 @@ button:disabled {
   position: absolute;
   inset: 0;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--gold), #b87d22);
+  background: linear-gradient(135deg, var(--gold), var(--accent-primary-dim));
   box-shadow: 0 8px 22px var(--gold-glow);
+  transition:
+    background 0.45s ease,
+    box-shadow 0.45s ease;
 }
 
 .mark-core {
@@ -283,66 +206,48 @@ button:disabled {
   gap: 0.65rem;
 }
 
-/* Sun / moon toggle */
-.theme-toggle {
-  position: relative;
-  width: 62px;
-  height: 32px;
+/* CircaHue status pill */
+.hue-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.3rem 0.65rem 0.3rem 0.35rem;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: var(--bg2);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 8px;
-  transition:
-    background 0.35s ease,
-    border-color 0.35s ease,
-    box-shadow 0.35s ease;
+  background: var(--surface);
+  max-width: 200px;
 }
 
-.theme-toggle:hover {
-  border-color: color-mix(in srgb, var(--gold) 45%, var(--line));
-  box-shadow: 0 0 0 3px var(--gold-soft);
-}
-
-.theme-toggle:focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 3px;
-}
-
-.theme-icon {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  color: var(--muted);
-  transition: color 0.3s ease, opacity 0.3s ease;
-}
-
-[data-theme="light"] .sun-icon {
-  color: #c47a12;
-}
-
-[data-theme="dark"] .moon-icon {
-  color: #c8d0e0;
-}
-
-.theme-knob {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 24px;
-  height: 24px;
+.hue-swatch {
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  background: linear-gradient(145deg, #fff, #e8e4dc);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  transition: transform 0.35s cubic-bezier(0.2, 1.1, 0.3, 1);
+  background: var(--gold);
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--bg1) 80%, transparent),
+    0 0 16px var(--gold-glow);
+  transition: background 0.45s ease, box-shadow 0.45s ease;
+  flex-shrink: 0;
 }
 
-[data-theme="light"] .theme-knob {
-  transform: translateX(30px);
-  background: linear-gradient(145deg, #ffe9a0, #f0b830);
+.hue-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.hue-phase {
+  font-size: 0.72rem;
+  font-weight: 650;
+  color: var(--text);
+  text-transform: capitalize;
+}
+
+.hue-hex {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--muted);
 }
 
 /* Buttons */
@@ -369,7 +274,7 @@ button:disabled {
 }
 
 .btn.primary {
-  background: linear-gradient(135deg, var(--gold), #c4841f);
+  background: linear-gradient(135deg, var(--gold), var(--accent-primary-dim));
   color: #1a1208;
   box-shadow: 0 10px 28px var(--gold-glow);
 }
@@ -421,10 +326,8 @@ main {
 
 .hero h1 em {
   font-style: normal;
-  background: linear-gradient(120deg, var(--gold), #f0c06a 55%, var(--gold));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--gold);
+  transition: color 0.45s ease;
 }
 
 .lede {
@@ -512,10 +415,6 @@ main {
   background: var(--bg1);
   box-shadow: var(--window-shadow);
   overflow: hidden;
-  transition:
-    background 0.5s ease,
-    border-color 0.5s ease,
-    box-shadow 0.5s ease;
 }
 
 .titlebar {
@@ -554,19 +453,14 @@ main {
   letter-spacing: 0.04em;
 }
 
-.title-theme {
+.title-hue {
   justify-self: end;
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  color: var(--muted);
-  font-size: 0.95rem;
-  line-height: 1;
-}
-
-[data-theme="dark"] .title-theme .sun-glyph,
-[data-theme="light"] .title-theme .moon-glyph {
-  display: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 12px var(--gold-glow);
+  transition: background 0.45s ease, box-shadow 0.45s ease;
 }
 
 .app-body {
@@ -683,8 +577,9 @@ main {
   height: calc(100px + var(--i) * 56px);
   margin: calc(-50px - var(--i) * 28px) 0 0 calc(-50px - var(--i) * 28px);
   border-radius: 50%;
-  border: 1px solid color-mix(in srgb, var(--gold) calc(12% - var(--i) * 3%), transparent);
+  border: 1px solid rgba(var(--light-hue-ring-rgb), calc(var(--light-hue-ring-alpha) * (0.45 - var(--i) * 0.1)));
   animation: spin calc(18s + var(--i) * 6s) linear infinite alternate;
+  transition: border-color 0.45s ease;
 }
 
 .drop-inner {
@@ -734,6 +629,7 @@ main {
   font-weight: 700;
   font-size: 0.9rem;
   color: var(--gold);
+  transition: color 0.45s ease;
 }
 
 .drop-inner h3 {
@@ -756,7 +652,7 @@ main {
   padding: 0 0.1rem;
 }
 
-/* Form controls (same as app) */
+/* Form controls */
 .controls {
   display: flex;
   flex-wrap: wrap;
@@ -804,10 +700,6 @@ main {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
-[data-theme="light"] .knob {
-  background: #9a9488;
-}
-
 .toggle input:checked + .track {
   background: var(--gold-soft);
   border-color: color-mix(in srgb, var(--gold) 50%, transparent);
@@ -825,11 +717,12 @@ main {
 .controls .primary {
   padding: 0.55rem 1.15rem;
   border-radius: 999px;
-  background: linear-gradient(135deg, var(--gold), #c4841f);
+  background: linear-gradient(135deg, var(--gold), var(--accent-primary-dim));
   color: #1a1208;
   font-weight: 700;
   font-size: 0.88rem;
   box-shadow: 0 8px 22px var(--gold-glow);
+  transition: background 0.45s ease, box-shadow 0.45s ease;
 }
 
 .controls .primary:hover:not(:disabled) {
@@ -956,10 +849,6 @@ main {
 
 .chip.cam {
   background: rgba(74, 168, 216, 0.16);
-  color: #4a9ec8;
-}
-
-[data-theme="dark"] .chip.cam {
   color: #8fd0f0;
 }
 
@@ -991,8 +880,8 @@ main {
   transform-origin: left center;
   transform: scaleX(0);
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--gold), #f0c06a);
-  transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.2, 1);
+  background: linear-gradient(90deg, var(--gold), var(--accent-primary-hover));
+  transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.2, 1), background 0.45s ease;
 }
 
 .status-done .bar {
@@ -1030,8 +919,56 @@ main {
 }
 
 .demo-note h3 {
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.5rem;
   font-size: 0.95rem;
+}
+
+.hue-caption {
+  margin: 0 0 0.9rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-family: var(--mono);
+  line-height: 1.4;
+}
+
+.hour-dial {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 0.45rem;
+}
+
+.hour-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.hour-label output {
+  font-family: var(--mono);
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.hour-dial input[type="range"] {
+  width: 100%;
+  accent-color: var(--gold);
+  cursor: pointer;
+}
+
+.hour-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: color-mix(in srgb, var(--muted) 80%, transparent);
+}
+
+.live-btn {
+  margin-bottom: 0.85rem;
+  font-size: 0.82rem;
 }
 
 .demo-note ol {
@@ -1198,11 +1135,6 @@ tbody tr:last-child td {
   line-height: 1.65;
 }
 
-[data-theme="light"] .code-block {
-  background: #1a160f;
-  color: #f5efe4;
-}
-
 .site-foot {
   width: min(1120px, calc(100% - 2.5rem));
   margin: 0 auto;
@@ -1280,18 +1212,19 @@ tbody tr:last-child td {
   .nav-links {
     display: none;
   }
-
-  .celestial {
-    width: 80px;
-    height: 80px;
-    top: 4vh;
-    right: 6vw;
-  }
 }
 
 @media (max-width: 520px) {
   .nav {
     padding: 0.7rem 1rem;
+  }
+
+  .hue-pill {
+    max-width: 140px;
+  }
+
+  .hue-hex {
+    display: none;
   }
 
   main {
