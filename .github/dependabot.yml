@@ -1,34 +1,29 @@
 version: 2
 updates:
-  # Maintain dependencies for GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
-      interval: "weekly"
-    target-branch: "main"
-    labels:
-      - "github-actions"
-      - "dependencies"
+      interval: weekly
+    target-branch: main
+    labels: [dependencies, github-actions]
     commit-message:
       prefix: "chore(ci)"
 
-  # Maintain dependencies for npm
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: npm
+    directory: /
     schedule:
-      interval: "weekly"
-    target-branch: "main"
-    labels:
-      - "pnpm"
-      - "dependencies"
+      interval: weekly
+    target-branch: main
+    labels: [dependencies, npm]
     commit-message:
       prefix: "chore(deps)"
     versioning-strategy: increase
-    groups:
-      react:
-        patterns:
-          - "react*"
-          - "@types/react*"
-      fumadocs:
-        patterns:
-          - "fumadocs-*"
+
+  - package-ecosystem: cargo
+    directory: /src-tauri
+    schedule:
+      interval: weekly
+    target-branch: main
+    labels: [dependencies, rust]
+    commit-message:
+      prefix: "chore(deps)"

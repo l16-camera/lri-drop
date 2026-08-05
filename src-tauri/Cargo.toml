@@ -12,7 +12,8 @@ crate-type = ["lib", "cdylib", "staticlib"]
 tauri-build = { version = "2.6", features = [] }
 
 [dependencies]
-light = { path = "../../light" }
+# Point at luminat monorepo (see README / scripts/link-luminat.sh)
+light = { path = "../vendor/luminat/light" }
 tauri = { version = "2.6", features = [] }
 tauri-plugin-dialog = "2.6"
 serde = { version = "1", features = ["derive"] }

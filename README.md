@@ -1,40 +1,89 @@
 # LRI Drop
 
+[![CI](https://github.com/l16-camera/lri-drop/actions/workflows/ci.yml/badge.svg)](https://github.com/l16-camera/lri-drop/actions/workflows/ci.yml)
+
 Simple **Tauri 2 + Svelte 5** app: drag-and-drop Light `.lri` → per-module Adobe **DNG**.
 
-Smooth drop-zone animations, queue cards, mono-only toggle, sticky output folder.
+Also: **From Light camera** (adb), mono-only export, queue with progress.
+
+Depends on the **[luminat](https://github.com/isamarin/luminat)** crate `light` (LRI parse/extract).
+
+## Setup
+
+```bash
+# 1) luminat monorepo (provides `light`)
+git clone https://github.com/isamarin/luminat.git ~/IGRS/luminat
+# or: export LUMINAT_PATH=/path/to/luminat
+
+# 2) link into this repo
+./scripts/link-luminat.sh
+
+# 3) frontend + rust
+npm install
+```
+
+Requires: Rust, Node 20+, Xcode CLT, `adb` on PATH for camera features.
 
 ## Dev
 
 ```bash
-# from luminat root
-make lri-drop
-# or:
-cd lri-drop
-npm install
+# install Tauri CLI once
+cargo install tauri-cli --version '^2'
+
 npm run tauri dev
 ```
 
-## Release
+## Lint & check (same as CI)
 
 ```bash
-make lri-drop-release
-# binary: target/release/lri-drop  (via tauri)
+npm run lint          # eslint (svelte + js)
+npm run build         # vite production build
+cargo fmt --all -- --check
+cargo clippy -p lri-drop --all-targets --no-deps -- -D warnings
+cargo build --release -p lri-drop
 ```
+
+## Build
+
+```bash
+npm run tauri build
+# or binary only:
+cargo build --release -p lri-drop
+```
+
+## CI (GitHub Actions)
+
+| Job | What |
+| --- | --- |
+| **Frontend** | `npm ci` · eslint · vite build · artifact `dist/` |
+| **Rust** | checkout luminat → fmt · clippy · release binary (macOS) |
+| **Tauri bundle** | on `v*` tags only |
+
+Workflow: [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 ## Features
 
 | Action | Result |
 | --- | --- |
 | Drop `.lri` | Inspect modules / mono tags, queue card |
-| **From Light camera** | Detect L16 via `adb`, browse `/sdcard/DCIM/Camera/*.lri`, multi-select, pull → queue |
+| **From Light camera** | adb · `/sdcard/DCIM/Camera/*.lri` · pull → queue |
 | **Convert** | `light::extract` → `<output>/<stem>/*.dng` |
-| Mono only | A2/C6 panchromatic planes (`A2_mono.dng`) |
-| Mono previews | `mono/A2.png` gray previews |
-| Click done path | Reveal in Finder |
+| Mono only | `A2_mono.dng` / `C6_mono.dng` |
+| Mono previews | `mono/A2.png` |
+| Reveal | Open output folder in Finder |
 
-Camera pulls cache under `~/Library/Caches/lri-drop/camera/` (skip re-download if size matches).
+Camera pull cache: `~/Library/Caches/lri-drop/camera/`.
 
-Requires `adb` on `PATH` (or `ADB=/path/to/adb`). USB: mtp,adb.
+## Relation to Luminat app
 
-Uses the same `light` crate as the CLI (`light extract`).
+| | **LRI Drop** (this repo) | **Luminat** (`luminat` / `lumen`) |
+| --- | --- | --- |
+| Focus | Fast LRI → DNG | Full desktop “own Lumen” |
+| Fusion | — | libcp quality render |
+| Camera | yes | yes (M2) |
+
+Same `light` library; different product shells.
+
+## License
+
+Same spirit as luminat / open L16 community tooling — isamarin × BLMK.

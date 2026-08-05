@@ -1,0 +1,134 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # ── Frontend (Vite + Svelte) ─────────────────────────────────────────
+  frontend:
+    name: Frontend · lint & build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint (eslint)
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: dist/
+          retention-days: 3
+
+  # ── Rust: fmt + clippy + release binary (needs luminat/light) ────────
+  rust:
+    name: Rust · fmt, clippy, build
+    runs-on: macos-latest
+    needs: [frontend]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkout luminat (light crate)
+        uses: actions/checkout@v4
+        with:
+          repository: isamarin/luminat
+          path: vendor/luminat
+
+      - name: Verify light path
+        run: test -f vendor/luminat/light/Cargo.toml
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Frontend dist (for tauri-build)
+        run: npm ci && npm run build
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: ". -> target"
+          cache-on-failure: true
+
+      - name: cargo fmt
+        run: cargo fmt --all -- --check
+
+      - name: cargo clippy
+        # --no-deps: only lint this app, not luminat path deps
+        run: cargo clippy -p lri-drop --all-targets --no-deps -- -D warnings
+
+      - name: cargo build --release
+        run: cargo build --release -p lri-drop
+
+      - name: Upload macOS binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: lri-drop-macos-aarch64
+          path: |
+            target/release/lri-drop
+          retention-days: 14
+          if-no-files-found: error
+
+  # ── Optional: full Tauri bundle on tags ──────────────────────────────
+  tauri-bundle:
+    name: Tauri bundle (macOS)
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: macos-latest
+    needs: [frontend, rust]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
+        with:
+          repository: isamarin/luminat
+          path: vendor/luminat
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: ". -> target"
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Tauri build
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: .
+          tauriScript: npm run tauri
+          args: -- --bundles app

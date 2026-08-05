@@ -1,5 +1,6 @@
 <script>
   import { onMount } from "svelte";
+  import { SvelteSet } from "svelte/reactivity";
   import { fade, fly, scale } from "svelte/transition";
   import { cubicOut } from "svelte/easing";
   import { invoke } from "@tauri-apps/api/core";
@@ -51,17 +52,17 @@
   let camPanel = $state(false);
   /** @type {RemoteLri[]} */
   let remoteList = $state([]);
-  /** @type {Set<string>} */
-  let selectedRemote = $state(new Set());
+  /** @type {SvelteSet<string>} */
+  let selectedRemote = new SvelteSet();
   let camError = $state("");
   let camLoading = $state(false);
 
-  const pending = $derived(queue.filter((q) => q.status === "ready" || q.status === "idle"));
   const doneCount = $derived(queue.filter((q) => q.status === "done").length);
   const errCount = $derived(queue.filter((q) => q.status === "error").length);
   const running = $derived(queue.find((q) => q.status === "running" || q.status === "pulling"));
   const lightOnline = $derived(!!camStatus?.light);
   const selectedCount = $derived(selectedRemote.size);
+  const readyCount = $derived(queue.filter((q) => q.status === "ready").length);
 
   function uid() {
     return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -109,7 +110,7 @@
     camPanel = true;
     camError = "";
     camLoading = true;
-    selectedRemote = new Set();
+    selectedRemote.clear();
     try {
       await refreshCamera();
       if (!camStatus?.light && !(camStatus?.devices?.length)) {
@@ -129,18 +130,17 @@
   }
 
   function toggleRemote(name) {
-    const next = new Set(selectedRemote);
-    if (next.has(name)) next.delete(name);
-    else next.add(name);
-    selectedRemote = next;
+    if (selectedRemote.has(name)) selectedRemote.delete(name);
+    else selectedRemote.add(name);
   }
 
   function selectAllRemote() {
-    selectedRemote = new Set(remoteList.map((r) => r.name));
+    selectedRemote.clear();
+    for (const r of remoteList) selectedRemote.add(r.name);
   }
 
   function selectNoneRemote() {
-    selectedRemote = new Set();
+    selectedRemote.clear();
   }
 
   async function pullSelectedToQueue() {
@@ -426,7 +426,6 @@
     </div>
   </header>
 
-  <!-- svelte-ignore a11y_no_static_element_interactions -->
   <section
     class="dropzone"
     class:active={dragging}
@@ -434,7 +433,7 @@
     in:scale={{ start: 0.96, duration: 450, easing: cubicOut }}
   >
     <div class="orbit" aria-hidden="true">
-      {#each [0, 1, 2] as i}
+      {#each [0, 1, 2] as i (i)}
         <span class="ring" style="--i: {i}"></span>
       {/each}
     </div>
@@ -477,7 +476,7 @@
       {#if busy}
         Converting…
       {:else}
-        Convert {queue.filter((q) => q.status === "ready").length || ""}
+        Convert {readyCount || ""}
       {/if}
     </button>
   </section>

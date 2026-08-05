@@ -1,5 +1,3 @@
-
-
 use std::path::PathBuf;
 
 use camino::Utf8PathBuf;
@@ -54,7 +52,10 @@ fn inspect_lri(path: String) -> Result<light::api::LriSummary, String> {
 }
 
 #[tauri::command]
-async fn pick_output_dir(app: AppHandle, state: State<'_, AppState>) -> Result<Option<String>, String> {
+async fn pick_output_dir(
+	app: AppHandle,
+	state: State<'_, AppState>,
+) -> Result<Option<String>, String> {
 	let path = app.dialog().file().blocking_pick_folder();
 	let s = path.map(|p| p.to_string());
 	if let Some(ref p) = s {
@@ -142,10 +143,7 @@ async fn convert_lri(
 
 	let stem = input_path.file_stem().unwrap_or("out");
 	let out_path = Utf8PathBuf::from(&output).join(stem);
-	let file_name = input_path
-		.file_name()
-		.unwrap_or("file.lri")
-		.to_string();
+	let file_name = input_path.file_name().unwrap_or("file.lri").to_string();
 
 	let opts = light::extract::ExtractOptions {
 		jobs: None,
@@ -166,27 +164,22 @@ async fn convert_lri(
 				phase: "start".into(),
 			},
 		);
-		light::extract::run_with_progress(
-			&input_path,
-			&out_path,
-			opts,
-			{
-				let app3 = app2.clone();
-				let file_label = file_label.clone();
-				move |done, total, camera| {
-					let _ = app3.emit(
-						"convert-progress",
-						ConvertProgress {
-							file: file_label.clone(),
-							done,
-							total,
-							camera: camera.to_string(),
-							phase: "module".into(),
-						},
-					);
-				}
-			},
-		)
+		light::extract::run_with_progress(&input_path, &out_path, opts, {
+			let app3 = app2.clone();
+			let file_label = file_label.clone();
+			move |done, total, camera| {
+				let _ = app3.emit(
+					"convert-progress",
+					ConvertProgress {
+						file: file_label.clone(),
+						done,
+						total,
+						camera: camera.to_string(),
+						phase: "module".into(),
+					},
+				);
+			}
+		})
 		.map_err(|e| e.to_string())
 		.map(|report| (out_path, report))
 	})

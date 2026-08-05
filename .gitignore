@@ -1,2 +1,6 @@
 node_modules
 dist
+# linked luminat monorepo
+/vendor/
+/src-tauri/target/
+/target/
