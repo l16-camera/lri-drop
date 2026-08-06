@@ -234,35 +234,38 @@
         </div>
 
         <div class="modules-stage">
-          <div class="l16-face" role="img" aria-label="Stylized Light L16 with sixteen camera modules lighting up">
-            <div class="l16-body">
-              <div class="l16-bezel">
-                <div class="mod-grid" id="modGrid">
-                  <!-- 4×4 module face: A / B / C banks (not physical layout, schematic) -->
-                  <button type="button" class="mod mono" data-id="A2" data-role="mono" style="--d:0"><span>A2</span><small>mono</small></button>
-                  <button type="button" class="mod" data-id="A1" data-role="color" style="--d:1"><span>A1</span><small>color</small></button>
-                  <button type="button" class="mod" data-id="A3" data-role="color" style="--d:2"><span>A3</span><small>color</small></button>
-                  <button type="button" class="mod" data-id="A4" data-role="color" style="--d:3"><span>A4</span><small>color</small></button>
-                  <button type="button" class="mod" data-id="A5" data-role="color" style="--d:4"><span>A5</span><small>color</small></button>
-                  <button type="button" class="mod" data-id="B1" data-role="color" style="--d:5"><span>B1</span><small>color</small></button>
-                  <button type="button" class="mod" data-id="B2" data-role="color" style="--d:6"><span>B2</span><small>color</small></button>
-                  <button type="button" class="mod" data-id="B3" data-role="color" style="--d:7"><span>B3</span><small>color</small></button>
-                  <button type="button" class="mod" data-id="B4" data-role="color" style="--d:8"><span>B4</span><small>color</small></button>
-                  <button type="button" class="mod" data-id="B5" data-role="color" style="--d:9"><span>B5</span><small>color</small></button>
-                  <button type="button" class="mod mono" data-id="C6" data-role="mono" style="--d:10"><span>C6</span><small>mono</small></button>
-                  <button type="button" class="mod" data-id="C1" data-role="color" style="--d:11"><span>C1</span><small>color</small></button>
-                  <button type="button" class="mod" data-id="C2" data-role="color" style="--d:12"><span>C2</span><small>color</small></button>
-                  <button type="button" class="mod" data-id="C3" data-role="color" style="--d:13"><span>C3</span><small>color</small></button>
-                  <button type="button" class="mod" data-id="C4" data-role="color" style="--d:14"><span>C4</span><small>color</small></button>
-                  <button type="button" class="mod" data-id="C5" data-role="color" style="--d:15"><span>C5</span><small>color</small></button>
-                </div>
-                <div class="l16-scan" aria-hidden="true"></div>
+          <!-- Module array: adapted from openfusion Claude artifact
+               https://claude.ai/code/artifact/6ccaac29-3827-4fd3-979f-86ef9bb263d6 -->
+          <div class="array-panel" id="array" aria-label="L16 module array — which lenses fire at each focal length">
+            <div class="array-head">
+              <div class="array-title">
+                MODULE ARRAY · <b>which lenses fire at each focal length</b>
               </div>
-              <div class="l16-caption">
-                <span class="pulse-label" id="modLive">A2 · mono plate</span>
-                <span class="arrow" aria-hidden="true">→</span>
-                <code id="modOut">A2_mono.dng</code>
+              <div class="fired-readout" id="firedReadout">10 modules firing</div>
+            </div>
+            <div class="rows" id="rows"><!-- built by JS --></div>
+
+            <div class="slider-wrap">
+              <div class="slider-top">
+                <div class="focal-val"><span id="focalVal">28</span> <span>mm equivalent</span></div>
+                <div class="regime-hint" id="regimeHint">wide + mid</div>
               </div>
+              <input
+                type="range"
+                id="focal"
+                min="28"
+                max="150"
+                value="28"
+                step="1"
+                aria-label="Focal length — scrub which module banks fire"
+              />
+              <div class="tick-row" aria-hidden="true"><span>28</span><span>70</span><span>150</span></div>
+              <p class="array-caption">
+                Measured on a live L16 (61 captures). Below ~70&nbsp;mm the wide row
+                (A) and mid row (B) expose; past it mid hands off to tele (C).
+                Reference module = widest that fired. Each lit cell becomes its own
+                DNG in LRI Drop.
+              </p>
             </div>
           </div>
 
@@ -270,34 +273,32 @@
             <h3>Separate frames from separate modules</h3>
             <p>
               The L16 ships <strong>sixteen optical modules</strong> in three banks
-              (A1–A5, B1–B5, C1–C6). Different focal lengths and two
-              <strong>monochrome</strong> sensors (typically <code>A2</code> /
-              <code>C6</code>) fire together. The phone stores them as one
-              <code>.lri</code> container — not a stack of JPEGs, and not a fused
-              “final” RAW.
+              (A1–A5 · B1–B5 · C1–C6). A shutter press packs the active set into one
+              <code>.lri</code> — not a stack of JPEGs, and not a fused “final” RAW.
+              LRI Drop unpacks what the hardware already recorded.
             </p>
             <ul class="mod-facts">
               <li>
-                <strong>Up to 16 DNGs per shot</strong> —
-                one Adobe DNG per module that actually wrote sensor data
-                (some captures use fewer active modules).
+                <strong>~10–11 DNGs per shot, not always 16</strong> —
+                only modules that fired write sensor data. Scrub the focal dial to
+                see the handoff.
               </li>
               <li>
                 <strong>Not duplicates</strong> —
-                each file is a different viewpoint / focal length / sensor type.
-                That is the multi-aperture raw, ready for Lightroom or research.
+                each file is a different viewpoint / focal band / sensor. That is
+                the multi-aperture raw for Lightroom or research.
               </li>
               <li>
-                <strong>Mono-only mode</strong> —
-                export just the mono plates as
-                <code>A2_mono.dng</code> / <code>C6_mono.dng</code>
-                when you only need panchromatic detail.
+                <strong>Mono plates</strong> —
+                <code>A2</code> and <code>C6</code> are monochrome (dashed cells).
+                Mono-only export keeps
+                <code>A2_mono.dng</code> / <code>C6_mono.dng</code>.
               </li>
             </ul>
             <p class="aside-muted">
-              Schematic grid above is for explanation — physical module layout on
-              the body is denser. Hover a cell to pin that module’s DNG name.
-              <!-- Slot for Claude’s camera animation when recovered. -->
+              Array UX from the
+              <a href="https://claude.ai/code/artifact/6ccaac29-3827-4fd3-979f-86ef9bb263d6">openfusion artifact</a>
+              · adapted for LRI Drop.
             </p>
           </div>
         </div>

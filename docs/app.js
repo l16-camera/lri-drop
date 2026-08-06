@@ -305,72 +305,95 @@ function clearDone() {
   renderQueue();
 }
 
-/** Module face: cycle highlight so “1 LRI → many DNGs” is visible. */
-function initModuleFace() {
-  const grid = document.getElementById("modGrid");
-  const live = document.getElementById("modLive");
-  const out = document.getElementById("modOut");
-  if (!grid || !live || !out) return;
+/**
+ * Module array from openfusion Claude artifact — which L16 banks fire
+ * at each focal length (measured handoff ~70 mm).
+ * @see https://claude.ai/code/artifact/6ccaac29-3827-4fd3-979f-86ef9bb263d6
+ */
+function initModuleArray() {
+  const rowsEl = document.getElementById("rows");
+  const focal = document.getElementById("focal");
+  const focalVal = document.getElementById("focalVal");
+  const regimeHint = document.getElementById("regimeHint");
+  const firedReadout = document.getElementById("firedReadout");
+  if (!rowsEl || !(focal instanceof HTMLInputElement) || !focalVal || !regimeHint || !firedReadout) {
+    return;
+  }
 
-  const mods = [...grid.querySelectorAll(".mod")];
-  if (!mods.length) return;
+  /** @type {{ id: string, name: string, role: string, cams: string[] }[]} */
+  const rows = [
+    { id: "A", name: "28 mm", role: "wide", cams: ["A1", "A2", "A3", "A4", "A5"] },
+    { id: "B", name: "70 mm", role: "mid", cams: ["B1", "B2", "B3", "B4", "B5"] },
+    { id: "C", name: "150 mm", role: "tele", cams: ["C1", "C2", "C3", "C4", "C5", "C6"] },
+  ];
+  const monoCams = new Set(["A2", "C6"]);
+  /** @type {Record<string, HTMLElement>} */
+  const cellMap = {};
 
-  let pinned = /** @type {HTMLElement | null} */ (null);
-  let idx = 0;
-  /** @type {ReturnType<typeof setInterval> | null} */
-  let timer = null;
+  rows.forEach((r) => {
+    const row = document.createElement("div");
+    row.className = "mrow";
 
-  /**
-   * @param {HTMLElement} el
-   * @param {boolean} [user]
-   */
-  function activate(el, user = false) {
-    mods.forEach((m) => m.classList.remove("active"));
-    el.classList.add("active");
-    const id = el.getAttribute("data-id") || "?";
-    const role = el.getAttribute("data-role") || "color";
-    const isMono = role === "mono";
-    live.textContent = isMono ? `${id} · mono plate` : `${id} · color module`;
-    out.textContent = isMono ? `${id}_mono.dng` : `${id}.dng`;
-    if (user) {
-      pinned = el;
-      idx = mods.indexOf(el);
+    const label = document.createElement("div");
+    label.className = "label";
+    label.innerHTML = `<b>Row ${r.id}</b>${r.name} · ${r.role}`;
+    row.appendChild(label);
+
+    const cells = document.createElement("div");
+    cells.className = "cells";
+    r.cams.forEach((c) => {
+      const cell = document.createElement("div");
+      cell.className = "cell" + (monoCams.has(c) ? " mono" : "");
+      cell.setAttribute("data-cam", c);
+      cell.setAttribute("title", monoCams.has(c) ? `${c} mono → ${c}_mono.dng` : `${c} → ${c}.dng`);
+      cell.innerHTML = `${c}<span class="dot" aria-hidden="true"></span>`;
+      cells.appendChild(cell);
+      cellMap[c] = cell;
+    });
+    row.appendChild(cells);
+    rowsEl.appendChild(row);
+  });
+
+  /** @param {string[]} fired */
+  function widestRef(fired) {
+    const order = [
+      "A1", "A2", "A3", "A4", "A5",
+      "B1", "B2", "B3", "B4", "B5",
+      "C1", "C2", "C3", "C4", "C5", "C6",
+    ];
+    for (const id of order) {
+      if (fired.includes(id)) return id;
     }
+    return null;
   }
 
-  mods.forEach((el) => {
-    el.addEventListener("mouseenter", () => activate(el, true));
-    el.addEventListener("focus", () => activate(el, true));
-    el.addEventListener("click", () => activate(el, true));
-  });
+  function update() {
+    const f = Number.parseInt(focal.value, 10);
+    focalVal.textContent = String(f);
 
-  activate(mods[0]);
+    /** @type {string[]} */
+    let fired = [];
+    if (f <= 70) {
+      fired = [...rows[0].cams, ...rows[1].cams];
+      regimeHint.textContent = "wide + mid";
+    } else {
+      fired = [...rows[1].cams, ...rows[2].cams];
+      regimeHint.textContent = "mid + tele";
+    }
 
-  const reduced =
-    typeof matchMedia === "function" &&
-    matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  if (!reduced) {
-    timer = setInterval(() => {
-      if (pinned && document.activeElement === pinned) return;
-      // After hover, keep pin for one extra tick then resume tour
-      if (pinned) {
-        pinned = null;
-      }
-      idx = (idx + 1) % mods.length;
-      activate(mods[idx]);
-    }, 1100);
+    const ref = widestRef(fired);
+    for (const [c, el] of Object.entries(cellMap)) {
+      const on = fired.includes(c);
+      el.classList.toggle("fired", on);
+      el.classList.toggle("ref", c === ref);
+    }
+    firedReadout.textContent = ref
+      ? `${fired.length} modules firing · ref ${ref}`
+      : `${fired.length} modules firing`;
   }
 
-  // Pause autoplay while pointer is over the bezel
-  const bezel = grid.closest(".l16-bezel");
-  bezel?.addEventListener("mouseleave", () => {
-    pinned = null;
-  });
-
-  return () => {
-    if (timer) clearInterval(timer);
-  };
+  focal.addEventListener("input", update);
+  update();
 }
 
 function init() {
@@ -387,7 +410,7 @@ function init() {
   });
 
   startLiveTicker();
-  initModuleFace();
+  initModuleArray();
 
   const zone = document.getElementById("dropzone");
   zone?.addEventListener("click", (e) => {
