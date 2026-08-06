@@ -159,6 +159,126 @@ jobs:
           retention-days: 14
           if-no-files-found: error
 
+  # ── GitHub Release (photographer-friendly downloads on v* tags) ─────
+  publish-release:
+    name: Publish GitHub Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [rust-build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download macOS binary
+        uses: actions/download-artifact@v4
+        with:
+          name: lri-drop-macos-aarch64
+          path: raw/macos
+
+      - name: Download Windows binary
+        uses: actions/download-artifact@v4
+        with:
+          name: lri-drop-windows-x64
+          path: raw/windows
+
+      - name: Download Linux binary
+        uses: actions/download-artifact@v4
+        with:
+          name: lri-drop-linux-x64
+          path: raw/linux
+
+      - name: Package release assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release
+          # Friendly filenames for non-developers
+          cp raw/macos/lri-drop release/LRI-Drop-macOS-Apple-Silicon
+          chmod +x release/LRI-Drop-macOS-Apple-Silicon
+          cp raw/windows/lri-drop.exe release/LRI-Drop-Windows-x64.exe
+          cp raw/linux/lri-drop release/LRI-Drop-Linux-x64
+          chmod +x release/LRI-Drop-Linux-x64
+
+          printf '%s\n' \
+            'LRI Drop — macOS (Apple Silicon)' \
+            '================================' \
+            '1. Unzip. Move LRI-Drop-macOS-Apple-Silicon anywhere you like.' \
+            '2. First open: right-click → Open → Open' \
+            '   (Gatekeeper blocks unsigned downloads once — that is normal.)' \
+            '3. Drop .lri files, or connect a Light L16 (needs adb on PATH).' \
+            '' \
+            'Camera: brew install android-platform-tools' \
+            > release/README-macOS.txt
+
+          printf '%s\n' \
+            'LRI Drop — Windows (x64)' \
+            '========================' \
+            '1. Unzip. Double-click LRI-Drop-Windows-x64.exe' \
+            '2. If SmartScreen appears: More info → Run anyway' \
+            '   (unsigned build from this open-source project).' \
+            '3. Drop .lri files, or connect a Light L16 (needs adb on PATH).' \
+            '' \
+            'Camera: Google Android platform-tools (adb).' \
+            > release/README-Windows.txt
+
+          printf '%s\n' \
+            'LRI Drop — Linux (x64)' \
+            '======================' \
+            '1. Unzip, then: chmod +x LRI-Drop-Linux-x64' \
+            '2. ./LRI-Drop-Linux-x64' \
+            '3. Needs WebKitGTK (e.g. libwebkit2gtk-4.1-0 on Ubuntu/Debian).' \
+            '' \
+            'Camera: adb on PATH.' \
+            > release/README-Linux.txt
+
+          (
+            cd release
+            zip -j LRI-Drop-macOS-Apple-Silicon.zip LRI-Drop-macOS-Apple-Silicon README-macOS.txt
+            zip -j LRI-Drop-Windows-x64.zip LRI-Drop-Windows-x64.exe README-Windows.txt
+            zip -j LRI-Drop-Linux-x64.zip LRI-Drop-Linux-x64 README-Linux.txt
+          )
+          ls -la release/
+
+      - name: Create or update GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          TITLE="LRI Drop ${TAG#v}"
+          ASSETS=(
+            release/LRI-Drop-macOS-Apple-Silicon.zip
+            release/LRI-Drop-Windows-x64.zip
+            release/LRI-Drop-Linux-x64.zip
+            release/LRI-Drop-macOS-Apple-Silicon
+            release/LRI-Drop-Windows-x64.exe
+            release/LRI-Drop-Linux-x64
+          )
+          NOTES="$(cat <<'EOF'
+          ## Download
+
+          | System | File |
+          | --- | --- |
+          | **Mac** (Apple Silicon) | `LRI-Drop-macOS-Apple-Silicon.zip` |
+          | **Windows** (x64) | `LRI-Drop-Windows-x64.zip` |
+          | **Linux** (x64) | `LRI-Drop-Linux-x64.zip` |
+
+          Each zip includes a short README. Builds are unsigned — macOS needs *right-click → Open* the first time; Windows SmartScreen may ask *More info → Run anyway*.
+
+          ## What it does
+
+          Drop Light L16 `.lri` captures (or pull over USB/adb) and export **per-module Adobe DNG** — full set or mono only (A2 / C6).
+          EOF
+          )"
+          if gh release view "$TAG" --repo "${{ github.repository }}" >/dev/null 2>&1; then
+            gh release upload "$TAG" --repo "${{ github.repository }}" --clobber "${ASSETS[@]}"
+          else
+            gh release create "$TAG" \
+              --repo "${{ github.repository }}" \
+              --title "$TITLE" \
+              --notes "$NOTES" \
+              "${ASSETS[@]}"
+          fi
+
   # ── Optional: full Tauri bundles on tags (all platforms) ─────────────
   tauri-bundle:
     name: Tauri · ${{ matrix.name }}

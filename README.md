@@ -54,6 +54,16 @@ npm run tauri build
 cargo build --release -p lri-drop
 ```
 
+## Download (photographers)
+
+**[Latest release →](https://github.com/l16-camera/lri-drop/releases/latest)** — zip per OS, no GitHub login required for public assets.
+
+| Platform | Asset |
+| --- | --- |
+| Mac (Apple Silicon) | `LRI-Drop-macOS-Apple-Silicon.zip` |
+| Windows x64 | `LRI-Drop-Windows-x64.zip` |
+| Linux x64 | `LRI-Drop-Linux-x64.zip` |
+
 ## CI (GitHub Actions)
 
 | Job | What |
@@ -61,9 +71,8 @@ cargo build --release -p lri-drop
 | **Frontend** | `npm ci` · eslint · vite build · artifact `dist/` |
 | **Rust · fmt & clippy** | checkout luminat → fmt · clippy (macOS) |
 | **Build** | release binary matrix: **macOS aarch64**, **Windows x64**, **Linux x64** |
+| **Publish Release** | on `v*` tags → GitHub Release with named zips + binaries |
 | **Tauri bundle** | on `v*` tags: app (macOS) · nsis (Windows) · deb (Linux) |
-
-Artifacts (14 days): `lri-drop-macos-aarch64`, `lri-drop-windows-x64`, `lri-drop-linux-x64`.
 
 Workflow: [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 

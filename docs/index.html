@@ -76,7 +76,7 @@
           (same living light idea as Luminat).
         </p>
         <div class="hero-cta">
-          <a class="btn primary" href="#download">macOS · Windows · Linux</a>
+          <a class="btn primary" href="#download">Download free</a>
           <a class="btn ghost" href="#demo">Try the UI demo</a>
         </div>
         <ul class="hero-meta">
@@ -424,38 +424,63 @@
 
       <section class="download" id="download" aria-labelledby="dl-title">
         <div class="section-head">
-          <h2 id="dl-title">Download builds</h2>
+          <h2 id="dl-title">Download LRI Drop</h2>
           <p>
-            CI ships <strong>release binaries</strong> for macOS, Windows, and Linux
-            on every green <code>main</code> push. Full Tauri installers (app / nsis / deb)
-            publish on version tags <code>v*</code>.
+            Free desktop app for photographers. Pick your system, unzip if needed,
+            open — no account, no installer wizard.
           </p>
         </div>
         <div class="dl-grid">
           <article class="dl-card">
-            <h3>macOS</h3>
-            <p class="dl-meta">Apple Silicon · release binary</p>
-            <p>Artifact <code>lri-drop-macos-aarch64</code> from the latest CI run, or build locally with Xcode CLT.</p>
-            <a class="btn ghost" href="https://github.com/l16-camera/lri-drop/actions/workflows/ci.yml">CI artifacts</a>
+            <h3>Mac</h3>
+            <p class="dl-meta">Apple Silicon (M1 / M2 / M3 / M4)</p>
+            <p>
+              Download the zip, open
+              <strong>LRI-Drop-macOS-Apple-Silicon</strong>.
+              First time: <em>right-click → Open</em> (unsigned build).
+            </p>
+            <a
+              class="btn primary"
+              href="https://github.com/l16-camera/lri-drop/releases/latest/download/LRI-Drop-macOS-Apple-Silicon.zip"
+              >Download for Mac</a
+            >
           </article>
           <article class="dl-card">
             <h3>Windows</h3>
-            <p class="dl-meta">x64 · <code>lri-drop.exe</code></p>
-            <p>Artifact <code>lri-drop-windows-x64</code>. Tag releases also produce NSIS installers via Tauri.</p>
-            <a class="btn ghost" href="https://github.com/l16-camera/lri-drop/actions/workflows/ci.yml">CI artifacts</a>
+            <p class="dl-meta">64-bit PC</p>
+            <p>
+              Download and run
+              <strong>LRI-Drop-Windows-x64.exe</strong>.
+              If SmartScreen warns: <em>More info → Run anyway</em>.
+            </p>
+            <a
+              class="btn primary"
+              href="https://github.com/l16-camera/lri-drop/releases/latest/download/LRI-Drop-Windows-x64.zip"
+              >Download for Windows</a
+            >
           </article>
           <article class="dl-card">
             <h3>Linux</h3>
-            <p class="dl-meta">x64 · glibc / WebKitGTK</p>
-            <p>Artifact <code>lri-drop-linux-x64</code>. Tag releases can ship <code>.deb</code> bundles.</p>
-            <a class="btn ghost" href="https://github.com/l16-camera/lri-drop/actions/workflows/ci.yml">CI artifacts</a>
+            <p class="dl-meta">x64 · Ubuntu / Debian-class</p>
+            <p>
+              Unzip, then
+              <code>chmod +x LRI-Drop-Linux-x64</code> and run it.
+              Needs WebKitGTK installed.
+            </p>
+            <a
+              class="btn primary"
+              href="https://github.com/l16-camera/lri-drop/releases/latest/download/LRI-Drop-Linux-x64.zip"
+              >Download for Linux</a
+            >
           </article>
         </div>
         <p class="aside-muted dl-note">
-          Prefer source? Clone, link
-          <a href="https://github.com/isamarin/luminat">luminat</a>, then
-          <code>npm run tauri dev</code> — see setup below. Camera pull needs
-          <code>adb</code> on PATH on all platforms.
+          All versions, release notes, and raw binaries:
+          <a href="https://github.com/l16-camera/lri-drop/releases/latest">GitHub Releases</a>.
+          Camera pull from a Light L16 needs
+          <a href="https://developer.android.com/tools/releases/platform-tools">adb</a>
+          on your PATH.
+          Prefer building from source? See setup below.
         </p>
       </section>
 
