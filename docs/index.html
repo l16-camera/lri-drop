@@ -41,7 +41,9 @@
 
       <nav class="nav-links" aria-label="Page">
         <a href="#demo">Demo</a>
+        <a href="#modules">Why 16 DNGs</a>
         <a href="#how">How it works</a>
+        <a href="#download">Download</a>
         <a href="#features">Features</a>
       </nav>
 
@@ -74,13 +76,13 @@
           (same living light idea as Luminat).
         </p>
         <div class="hero-cta">
-          <a class="btn primary" href="https://github.com/l16-camera/lri-drop#setup">Get the app</a>
+          <a class="btn primary" href="#download">macOS · Windows · Linux</a>
           <a class="btn ghost" href="#demo">Try the UI demo</a>
         </div>
         <ul class="hero-meta">
-          <li><span>Format</span> .lri → .dng</li>
+          <li><span>Format</span> .lri → per-module .dng</li>
           <li><span>Camera</span> USB + adb pull</li>
-          <li><span>Accent</span> circahue</li>
+          <li><span>Why many files</span> 1 LRI = up to 16 sensors</li>
         </ul>
       </section>
 
@@ -220,6 +222,87 @@
         </div>
       </section>
 
+      <section class="modules" id="modules" aria-labelledby="modules-title">
+        <div class="section-head">
+          <h2 id="modules-title">Why so many raw files?</h2>
+          <p>
+            One Light L16 shutter press is not one photo — it is a
+            <strong>multi-camera capture</strong> packed into a single
+            <code>.lri</code>. LRI Drop does not “multiply” frames; it
+            <em>unpacks</em> what the hardware already recorded.
+          </p>
+        </div>
+
+        <div class="modules-stage">
+          <div class="l16-face" role="img" aria-label="Stylized Light L16 with sixteen camera modules lighting up">
+            <div class="l16-body">
+              <div class="l16-bezel">
+                <div class="mod-grid" id="modGrid">
+                  <!-- 4×4 module face: A / B / C banks (not physical layout, schematic) -->
+                  <button type="button" class="mod mono" data-id="A2" data-role="mono" style="--d:0"><span>A2</span><small>mono</small></button>
+                  <button type="button" class="mod" data-id="A1" data-role="color" style="--d:1"><span>A1</span><small>color</small></button>
+                  <button type="button" class="mod" data-id="A3" data-role="color" style="--d:2"><span>A3</span><small>color</small></button>
+                  <button type="button" class="mod" data-id="A4" data-role="color" style="--d:3"><span>A4</span><small>color</small></button>
+                  <button type="button" class="mod" data-id="A5" data-role="color" style="--d:4"><span>A5</span><small>color</small></button>
+                  <button type="button" class="mod" data-id="B1" data-role="color" style="--d:5"><span>B1</span><small>color</small></button>
+                  <button type="button" class="mod" data-id="B2" data-role="color" style="--d:6"><span>B2</span><small>color</small></button>
+                  <button type="button" class="mod" data-id="B3" data-role="color" style="--d:7"><span>B3</span><small>color</small></button>
+                  <button type="button" class="mod" data-id="B4" data-role="color" style="--d:8"><span>B4</span><small>color</small></button>
+                  <button type="button" class="mod" data-id="B5" data-role="color" style="--d:9"><span>B5</span><small>color</small></button>
+                  <button type="button" class="mod mono" data-id="C6" data-role="mono" style="--d:10"><span>C6</span><small>mono</small></button>
+                  <button type="button" class="mod" data-id="C1" data-role="color" style="--d:11"><span>C1</span><small>color</small></button>
+                  <button type="button" class="mod" data-id="C2" data-role="color" style="--d:12"><span>C2</span><small>color</small></button>
+                  <button type="button" class="mod" data-id="C3" data-role="color" style="--d:13"><span>C3</span><small>color</small></button>
+                  <button type="button" class="mod" data-id="C4" data-role="color" style="--d:14"><span>C4</span><small>color</small></button>
+                  <button type="button" class="mod" data-id="C5" data-role="color" style="--d:15"><span>C5</span><small>color</small></button>
+                </div>
+                <div class="l16-scan" aria-hidden="true"></div>
+              </div>
+              <div class="l16-caption">
+                <span class="pulse-label" id="modLive">A2 · mono plate</span>
+                <span class="arrow" aria-hidden="true">→</span>
+                <code id="modOut">A2_mono.dng</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="modules-copy">
+            <h3>Separate frames from separate modules</h3>
+            <p>
+              The L16 ships <strong>sixteen optical modules</strong> in three banks
+              (A1–A5, B1–B5, C1–C6). Different focal lengths and two
+              <strong>monochrome</strong> sensors (typically <code>A2</code> /
+              <code>C6</code>) fire together. The phone stores them as one
+              <code>.lri</code> container — not a stack of JPEGs, and not a fused
+              “final” RAW.
+            </p>
+            <ul class="mod-facts">
+              <li>
+                <strong>Up to 16 DNGs per shot</strong> —
+                one Adobe DNG per module that actually wrote sensor data
+                (some captures use fewer active modules).
+              </li>
+              <li>
+                <strong>Not duplicates</strong> —
+                each file is a different viewpoint / focal length / sensor type.
+                That is the multi-aperture raw, ready for Lightroom or research.
+              </li>
+              <li>
+                <strong>Mono-only mode</strong> —
+                export just the mono plates as
+                <code>A2_mono.dng</code> / <code>C6_mono.dng</code>
+                when you only need panchromatic detail.
+              </li>
+            </ul>
+            <p class="aside-muted">
+              Schematic grid above is for explanation — physical module layout on
+              the body is denser. Hover a cell to pin that module’s DNG name.
+              <!-- Slot for Claude’s camera animation when recovered. -->
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section class="how" id="how" aria-labelledby="how-title">
         <div class="section-head">
           <h2 id="how-title">From capture to DNG</h2>
@@ -338,10 +421,47 @@
         </div>
       </section>
 
+      <section class="download" id="download" aria-labelledby="dl-title">
+        <div class="section-head">
+          <h2 id="dl-title">Download builds</h2>
+          <p>
+            CI ships <strong>release binaries</strong> for macOS, Windows, and Linux
+            on every green <code>main</code> push. Full Tauri installers (app / nsis / deb)
+            publish on version tags <code>v*</code>.
+          </p>
+        </div>
+        <div class="dl-grid">
+          <article class="dl-card">
+            <h3>macOS</h3>
+            <p class="dl-meta">Apple Silicon · release binary</p>
+            <p>Artifact <code>lri-drop-macos-aarch64</code> from the latest CI run, or build locally with Xcode CLT.</p>
+            <a class="btn ghost" href="https://github.com/l16-camera/lri-drop/actions/workflows/ci.yml">CI artifacts</a>
+          </article>
+          <article class="dl-card">
+            <h3>Windows</h3>
+            <p class="dl-meta">x64 · <code>lri-drop.exe</code></p>
+            <p>Artifact <code>lri-drop-windows-x64</code>. Tag releases also produce NSIS installers via Tauri.</p>
+            <a class="btn ghost" href="https://github.com/l16-camera/lri-drop/actions/workflows/ci.yml">CI artifacts</a>
+          </article>
+          <article class="dl-card">
+            <h3>Linux</h3>
+            <p class="dl-meta">x64 · glibc / WebKitGTK</p>
+            <p>Artifact <code>lri-drop-linux-x64</code>. Tag releases can ship <code>.deb</code> bundles.</p>
+            <a class="btn ghost" href="https://github.com/l16-camera/lri-drop/actions/workflows/ci.yml">CI artifacts</a>
+          </article>
+        </div>
+        <p class="aside-muted dl-note">
+          Prefer source? Clone, link
+          <a href="https://github.com/isamarin/luminat">luminat</a>, then
+          <code>npm run tauri dev</code> — see setup below. Camera pull needs
+          <code>adb</code> on PATH on all platforms.
+        </p>
+      </section>
+
       <section class="cta-band">
         <div>
           <h2>Clone, link luminat, run.</h2>
-          <p>macOS, Rust, Node 20+, Xcode CLT. <code>adb</code> on PATH for camera features.</p>
+          <p>Rust, Node 20+, platform WebView deps. <code>adb</code> on PATH for camera features.</p>
         </div>
         <pre class="code-block" tabindex="0"><code>git clone https://github.com/l16-camera/lri-drop.git
 cd lri-drop

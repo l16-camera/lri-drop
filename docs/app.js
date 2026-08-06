@@ -305,6 +305,74 @@ function clearDone() {
   renderQueue();
 }
 
+/** Module face: cycle highlight so “1 LRI → many DNGs” is visible. */
+function initModuleFace() {
+  const grid = document.getElementById("modGrid");
+  const live = document.getElementById("modLive");
+  const out = document.getElementById("modOut");
+  if (!grid || !live || !out) return;
+
+  const mods = [...grid.querySelectorAll(".mod")];
+  if (!mods.length) return;
+
+  let pinned = /** @type {HTMLElement | null} */ (null);
+  let idx = 0;
+  /** @type {ReturnType<typeof setInterval> | null} */
+  let timer = null;
+
+  /**
+   * @param {HTMLElement} el
+   * @param {boolean} [user]
+   */
+  function activate(el, user = false) {
+    mods.forEach((m) => m.classList.remove("active"));
+    el.classList.add("active");
+    const id = el.getAttribute("data-id") || "?";
+    const role = el.getAttribute("data-role") || "color";
+    const isMono = role === "mono";
+    live.textContent = isMono ? `${id} · mono plate` : `${id} · color module`;
+    out.textContent = isMono ? `${id}_mono.dng` : `${id}.dng`;
+    if (user) {
+      pinned = el;
+      idx = mods.indexOf(el);
+    }
+  }
+
+  mods.forEach((el) => {
+    el.addEventListener("mouseenter", () => activate(el, true));
+    el.addEventListener("focus", () => activate(el, true));
+    el.addEventListener("click", () => activate(el, true));
+  });
+
+  activate(mods[0]);
+
+  const reduced =
+    typeof matchMedia === "function" &&
+    matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!reduced) {
+    timer = setInterval(() => {
+      if (pinned && document.activeElement === pinned) return;
+      // After hover, keep pin for one extra tick then resume tour
+      if (pinned) {
+        pinned = null;
+      }
+      idx = (idx + 1) % mods.length;
+      activate(mods[idx]);
+    }, 1100);
+  }
+
+  // Pause autoplay while pointer is over the bezel
+  const bezel = grid.closest(".l16-bezel");
+  bezel?.addEventListener("mouseleave", () => {
+    pinned = null;
+  });
+
+  return () => {
+    if (timer) clearInterval(timer);
+  };
+}
+
 function init() {
   const dial = document.getElementById("hourDial");
   if (dial instanceof HTMLInputElement) {
@@ -319,6 +387,7 @@ function init() {
   });
 
   startLiveTicker();
+  initModuleFace();
 
   const zone = document.getElementById("dropzone");
   zone?.addEventListener("click", (e) => {

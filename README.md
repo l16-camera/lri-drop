@@ -3,9 +3,11 @@
 [![CI](https://github.com/l16-camera/lri-drop/actions/workflows/ci.yml/badge.svg)](https://github.com/l16-camera/lri-drop/actions/workflows/ci.yml)
 [![Pages](https://github.com/l16-camera/lri-drop/actions/workflows/pages.yml/badge.svg)](https://github.com/l16-camera/lri-drop/actions/workflows/pages.yml)
 
-**[Live demo / landing →](https://l16-camera.github.io/lri-drop/)** — interactive UI shell, [circahue](https://github.com/isamarin/circahue) accent dial, product walkthrough.
+**[Live demo / landing →](https://l16-camera.github.io/lri-drop/)** — interactive UI shell, [circahue](https://github.com/isamarin/circahue) accent dial, **why 16 DNGs** module map, product walkthrough.
 
-Desktop **Tauri 2 + Svelte 5** converter for **Light L16**: drop `.lri` captures (or pull over **adb**), inspect modules, export per-module Adobe **DNG** — full set or **mono only** (A2 / C6) with optional PNG previews and a progress queue.
+Desktop **Tauri 2 + Svelte 5** converter for **Light L16**: drop `.lri` captures (or pull over **adb**), inspect modules, export **per-module** Adobe **DNG** — full set or **mono only** (A2 / C6) with optional PNG previews and a progress queue.
+
+One L16 shutter is a multi-camera pack (up to **16 optical modules** in A/B/C banks). LRI Drop unpacks those separate sensor frames — it does not invent extra copies.
 
 Depends on the **[luminat](https://github.com/isamarin/luminat)** crate `light` (LRI parse/extract). Brand chrome uses **[circahue](https://github.com/isamarin/circahue)** (`@igrs/circahue`) for a living circadian accent.
 
@@ -23,7 +25,7 @@ git clone https://github.com/isamarin/luminat.git ~/IGRS/luminat
 npm install
 ```
 
-Requires: Rust, Node 20+, Xcode CLT, `adb` on PATH for camera features.
+Requires: Rust, Node 20+, platform WebView deps (Xcode CLT on macOS; WebKitGTK on Linux), `adb` on PATH for camera features.
 
 ## Dev
 
@@ -57,8 +59,11 @@ cargo build --release -p lri-drop
 | Job | What |
 | --- | --- |
 | **Frontend** | `npm ci` · eslint · vite build · artifact `dist/` |
-| **Rust** | checkout luminat → fmt · clippy · release binary (macOS) |
-| **Tauri bundle** | on `v*` tags only |
+| **Rust · fmt & clippy** | checkout luminat → fmt · clippy (macOS) |
+| **Build** | release binary matrix: **macOS aarch64**, **Windows x64**, **Linux x64** |
+| **Tauri bundle** | on `v*` tags: app (macOS) · nsis (Windows) · deb (Linux) |
+
+Artifacts (14 days): `lri-drop-macos-aarch64`, `lri-drop-windows-x64`, `lri-drop-linux-x64`.
 
 Workflow: [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
@@ -68,12 +73,14 @@ Workflow: [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 | --- | --- |
 | Drop `.lri` | Inspect modules / mono tags, queue card |
 | **From Light camera** | adb · `/sdcard/DCIM/Camera/*.lri` · pull → queue |
-| **Convert** | `light::extract` → `<output>/<stem>/*.dng` |
+| **Convert** | `light::extract` → `<output>/<stem>/*.dng` (one DNG per module) |
 | Mono only | `A2_mono.dng` / `C6_mono.dng` |
 | Mono previews | `mono/A2.png` |
-| Reveal | Open output folder in Finder |
+| Reveal | Open output folder (OS file manager) |
 
-Camera pull cache: `~/Library/Caches/lri-drop/camera/`.
+**Why many DNGs?** L16 banks A1–A5 · B1–B5 · C1–C6 — separate sensors/focals, not duplicates. See the [landing module map](https://l16-camera.github.io/lri-drop/#modules).
+
+Camera pull cache (macOS): `~/Library/Caches/lri-drop/camera/` (platform cache dirs elsewhere).
 
 ## Relation to Luminat app
 
