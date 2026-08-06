@@ -397,10 +397,15 @@
 <main class="shell" class:dragging class:pulse class:done-burst={doneBurst}>
   <header class="top" in:fly={{ y: -16, duration: 500, easing: cubicOut }}>
     <div class="brand">
-      <div class="mark" aria-hidden="true">
-        <span class="mark-ring"></span>
-        <span class="mark-core">16</span>
-      </div>
+      <img
+        class="mark"
+        src="/icons/app-icon.png"
+        width="48"
+        height="48"
+        alt=""
+        aria-hidden="true"
+        draggable="false"
+      />
       <div>
         <h1>LRI Drop</h1>
         <p>Light Raw → DNG · drop or from camera</p>
@@ -662,11 +667,11 @@
     background: radial-gradient(900px 500px at 50% 30%, var(--gold-soft), transparent 60%);
   }
 
-  .shell.pulse .mark-core {
+  .shell.pulse .mark {
     animation: pop 0.55s cubic-bezier(0.2, 1.4, 0.3, 1);
   }
 
-  .shell.done-burst .mark-ring {
+  .shell.done-burst .mark {
     animation: ring-burst 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
@@ -684,28 +689,13 @@
   }
 
   .mark {
-    position: relative;
     width: 48px;
     height: 48px;
-    display: grid;
-    place-items: center;
-  }
-
-  .mark-ring {
-    position: absolute;
-    inset: 0;
     border-radius: 14px;
-    background: linear-gradient(135deg, var(--gold), var(--accent-primary-dim));
-    opacity: 0.95;
+    object-fit: cover;
+    flex-shrink: 0;
     box-shadow: 0 8px 28px var(--gold-glow);
-  }
-
-  .mark-core {
-    position: relative;
-    font-weight: 800;
-    font-size: 0.95rem;
-    color: #1a1208;
-    letter-spacing: -0.02em;
+    user-select: none;
   }
 
   h1 {
