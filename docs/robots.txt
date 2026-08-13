@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://l16-camera.github.io/lri-drop/sitemap.xml
