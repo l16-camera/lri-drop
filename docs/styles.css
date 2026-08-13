@@ -28,8 +28,9 @@
   --sky-top: #0c0d14;
   --sky-bot: #141820;
   --window-shadow: 0 40px 100px rgba(0, 0, 0, 0.55);
-  --font: "Outfit", system-ui, -apple-system, sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font: "Outfit", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP",
+    "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "IBM Plex Mono", "Hiragino Kaku Gothic ProN", ui-monospace, monospace;
   color-scheme: dark;
 }
 
@@ -232,6 +233,31 @@ button:disabled {
   display: flex;
   align-items: center;
   gap: 0.65rem;
+}
+
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.15rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.lang-switch button {
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  padding: 0.28rem 0.5rem;
+  border-radius: 999px;
+  color: var(--muted);
+}
+
+.lang-switch button.is-on,
+.lang-switch button[aria-pressed="true"] {
+  color: var(--text);
+  background: color-mix(in srgb, var(--gold) 18%, transparent);
 }
 
 /* CircaHue status pill */
@@ -1742,6 +1768,11 @@ tbody tr:last-child td {
 
   .hue-hex {
     display: none;
+  }
+
+  .lang-switch button {
+    padding: 0.24rem 0.38rem;
+    font-size: 0.62rem;
   }
 
   main {

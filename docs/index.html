@@ -66,17 +66,22 @@
         </span>
       </a>
 
-      <nav class="nav-links" aria-label="Page">
-        <a href="#owners">For owners</a>
-        <a href="#demo">Demo</a>
-        <a href="#modules">Why 16 DNGs</a>
-        <a href="#how">How it works</a>
-        <a href="#download">Download</a>
+      <nav class="nav-links" data-i18n-aria="navAria" aria-label="Page">
+        <a href="#owners" data-i18n="navOwners">For owners</a>
+        <a href="#demo" data-i18n="navDemo">Demo</a>
+        <a href="#modules" data-i18n="navModules">Why 16 DNGs</a>
+        <a href="#how" data-i18n="navHow">How it works</a>
+        <a href="#download" data-i18n="navDownload">Download</a>
       </nav>
 
       <div class="nav-end">
+        <div class="lang-switch" role="group" data-i18n-aria="langAria" aria-label="Language">
+          <button type="button" data-lang="en" aria-pressed="true">EN</button>
+          <button type="button" data-lang="ja" aria-pressed="false">日本語</button>
+          <button type="button" data-lang="ru" aria-pressed="false">RU</button>
+        </div>
         <!-- Living accent (circahue) — replaces static brand gold / day-night toggle -->
-        <div class="hue-pill" id="huePill" title="Circadian accent · circahue">
+        <div class="hue-pill" id="huePill" data-i18n-title="hueTitle" title="Circadian accent · circahue">
           <span class="hue-swatch" id="hueSwatch" aria-hidden="true"></span>
           <span class="hue-meta">
             <span class="hue-phase" id="huePhase">…</span>
@@ -87,26 +92,26 @@
       </div>
     </header>
 
-    <aside class="dispatch" aria-label="Message for L16 owners">
+    <aside class="dispatch" data-i18n-aria="dispatchAria" aria-label="Message for L16 owners">
       <div class="dispatch-inner">
-        <span class="dispatch-kicker">For L16 owners</span>
-        <p>
+        <span class="dispatch-kicker" data-i18n="dispatchKicker">For L16 owners</span>
+        <p data-i18n-html="dispatchBody">
           Your <code>/lightcal</code> factory dump is unique to the sensors in
           this body. The calibration rig is gone. Pull is read-only — no root.
         </p>
-        <a class="dispatch-jump" href="#owners">Read the letter</a>
+        <a class="dispatch-jump" href="#owners" data-i18n="dispatchRead">Read the letter</a>
       </div>
     </aside>
 
     <main id="top">
       <article class="page-copy">
       <section class="hero">
-        <p class="eyebrow">Tauri 2 · Svelte 5 · open L16 tooling</p>
-        <h1>
+        <p class="eyebrow" data-i18n="heroEyebrow">Tauri 2 · Svelte 5 · open L16 tooling</p>
+        <h1 data-i18n-html="heroTitle">
           Drop a Light capture.<br />
           <em>Walk away with DNG.</em>
         </h1>
-        <p class="lede">
+        <p class="lede" data-i18n-html="heroLede">
           LRI Drop is a small desktop converter for <strong>Light L16</strong>
           <code>.lri</code> files. It inspects modules, pulls shots from the camera
           over <code>adb</code>, and writes per-module Adobe DNG — full set or mono
@@ -115,29 +120,29 @@
           (same living light idea as Luminat).
         </p>
         <div class="hero-cta">
-          <a class="btn primary" href="#download">Download free</a>
-          <a class="btn ghost" href="#demo">Try the UI demo</a>
+          <a class="btn primary" href="#download" data-i18n="heroCtaDl">Download free</a>
+          <a class="btn ghost" href="#demo" data-i18n="heroCtaDemo">Try the UI demo</a>
         </div>
         <ul class="hero-meta">
-          <li><span>Format</span> .lri → per-module .dng</li>
-          <li><span>Camera</span> USB + adb pull</li>
-          <li><span>Why many files</span> 1 LRI = up to 16 sensors</li>
+          <li><span data-i18n="heroMetaFormatL">Format</span> <span data-i18n="heroMetaFormat">.lri → per-module .dng</span></li>
+          <li><span data-i18n="heroMetaCamL">Camera</span> <span data-i18n="heroMetaCam">USB + adb pull</span></li>
+          <li><span data-i18n="heroMetaWhyL">Why many files</span> <span data-i18n="heroMetaWhy">1 LRI = up to 16 sensors</span></li>
         </ul>
       </section>
 
       <section class="letter" id="owners" aria-labelledby="owners-title">
         <div class="letter-sheet">
-          <p class="letter-kicker">A note to anyone still shooting the L16</p>
-          <h2 id="owners-title">For L16 owners</h2>
+          <p class="letter-kicker" data-i18n="letterKicker">A note to anyone still shooting the L16</p>
+          <h2 id="owners-title" data-i18n="letterTitle">For L16 owners</h2>
           <div class="letter-body">
-            <p>
+            <p data-i18n-html="letterP1">
               Your camera holds something no phone will give you: the raw planes
               of every module that took part in a shot, before any fusion, inside
               the <code>.lri</code> container. Two of those modules — A2 at
               28&nbsp;mm and C6 at 150&nbsp;mm — are panchromatic AR1335 sensors
               with no colour filter array, which Light never documented anywhere.
             </p>
-            <p>
+            <p data-i18n-html="letterP2">
               It also holds its own factory calibration in
               <code>/lightcal</code>: per-module colour under three illuminants,
               geometry, module coverage, and a hot-pixel map measured on those
@@ -146,11 +151,11 @@
             </p>
             <div class="pull-cmd">
               <pre class="code-block" id="lightcalCmd"><code>adb pull /lightcal ./lightcal-backup</code></pre>
-              <button type="button" class="ghost-pill copy-cmd" id="copyLightcal" data-copy="adb pull /lightcal ./lightcal-backup">
+              <button type="button" class="ghost-pill copy-cmd" id="copyLightcal" data-i18n="letterCopy" data-copy="adb pull /lightcal ./lightcal-backup">
                 Copy
               </button>
             </div>
-            <p>
+            <p data-i18n-html="letterP3">
               Sharing yours builds a corpus that has never existed. It would
               answer questions a single unit cannot: whether the panchromatic
               modules always sit at A2 and C6, how much of the calibration is
@@ -158,7 +163,7 @@
               changed across firmware revisions.
             </p>
           </div>
-          <p class="letter-foot">
+          <p class="letter-foot" data-i18n-html="letterFoot">
             If you dump it,
             <a
               href="https://github.com/l16-camera/lri-drop/issues/new?title=lightcal%20backup"
@@ -174,8 +179,8 @@
 
       <section class="demo" id="demo" aria-labelledby="demo-title">
         <div class="section-head">
-          <h2 id="demo-title">Interactive shell</h2>
-          <p>
+          <h2 id="demo-title" data-i18n="demoTitle">Interactive shell</h2>
+          <p data-i18n-html="demoLede">
             Same controls as the desktop app — toggles, queue cards, progress.
             Drag the hour dial to scrub the <strong>circahue</strong> accent through
             a full day (midnight → zenith → sunset → night).
@@ -183,7 +188,7 @@
         </div>
 
         <div class="demo-stage">
-          <div class="app-window" role="region" aria-label="LRI Drop UI demo">
+          <div class="app-window" role="region" data-i18n-aria="demoAria" aria-label="LRI Drop UI demo">
             <div class="titlebar">
               <div class="traffic" aria-hidden="true">
                 <span></span><span></span><span></span>
@@ -206,7 +211,7 @@
                   />
                   <div>
                     <strong>LRI Drop</strong>
-                    <p>Light Raw → DNG · drop or from camera</p>
+                    <p data-i18n="demoSub">Light Raw → DNG · drop or from camera</p>
                   </div>
                 </div>
                 <div class="app-actions">
@@ -214,7 +219,7 @@
                     <span class="cam-dot"></span>
                     Light L16
                   </button>
-                  <button type="button" class="ghost-pill">Exports</button>
+                  <button type="button" class="ghost-pill" data-i18n="demoExports">Exports</button>
                 </div>
               </header>
 
@@ -223,6 +228,7 @@
                 id="dropzone"
                 tabindex="0"
                 role="button"
+                data-i18n-aria="dropAria"
                 aria-label="Demo drop zone — click to add a sample file"
               >
                 <div class="orbit" aria-hidden="true">
@@ -236,10 +242,12 @@
                     <div class="file-ghost g2"></div>
                     <div class="file-main">.lri</div>
                   </div>
-                  <h3 id="dropTitle">Drop .lri files here</h3>
+                  <h3 id="dropTitle" data-i18n="dropTitle">Drop .lri files here</h3>
                   <p class="hint">
-                    or <button type="button" class="inline-link" id="addSample">add sample shot</button>
-                    · mono as <code>A2_mono.dng</code>
+                    <span data-i18n="dropHintBefore">or</span>
+                    <button type="button" class="inline-link" id="addSample" data-i18n="dropAdd">add sample shot</button>
+                    <span data-i18n="dropHintAfter">· mono as</span>
+                    <code>A2_mono.dng</code>
                   </p>
                 </div>
               </div>
@@ -248,24 +256,24 @@
                 <label class="toggle">
                   <input type="checkbox" name="onlyMono" id="onlyMono" />
                   <span class="track"><span class="knob"></span></span>
-                  <span>Mono only (A2 / C6)</span>
+                  <span data-i18n="toggleMono">Mono only (A2 / C6)</span>
                 </label>
                 <label class="toggle">
                   <input type="checkbox" name="monoPreviews" id="monoPreviews" checked />
                   <span class="track"><span class="knob"></span></span>
-                  <span>Mono PNG previews</span>
+                  <span data-i18n="togglePrev">Mono PNG previews</span>
                 </label>
                 <div class="spacer"></div>
-                <button type="button" class="primary" id="convertBtn" disabled>Convert</button>
+                <button type="button" class="primary" id="convertBtn" disabled data-i18n="convert">Convert</button>
               </form>
 
               <div class="queue" id="queue">
-                <p class="empty" id="queueEmpty">Queue empty — drop files or open camera</p>
+                <p class="empty" id="queueEmpty" data-i18n="queueEmpty">Queue empty — drop files or open camera</p>
                 <div class="queue-live" id="queueLive" hidden>
                   <div class="queue-head">
                     <span id="queueCount">0 files</span>
                     <span class="stats" id="queueStats"></span>
-                    <button type="button" class="link" id="clearDone" hidden>Clear done</button>
+                    <button type="button" class="link" id="clearDone" hidden data-i18n="clearDone">Clear done</button>
                   </div>
                   <ul class="cards" id="cards"></ul>
                 </div>
@@ -276,11 +284,11 @@
           </div>
 
           <aside class="demo-note">
-            <h3>CircaHue accent</h3>
+            <h3 data-i18n="hueAsideTitle">CircaHue accent</h3>
             <p class="hue-caption" id="hueCaption">Sampling…</p>
             <label class="hour-dial">
               <span class="hour-label">
-                Hour scrub
+                <span data-i18n="hourScrub">Hour scrub</span>
                 <output id="hourOut" for="hourDial">live</output>
               </span>
               <input
@@ -290,19 +298,20 @@
                 max="24"
                 step="0.25"
                 value="12"
+                data-i18n-aria="hourAria"
                 aria-label="Override local hour for accent color"
               />
               <span class="hour-ticks" aria-hidden="true">
                 <span>0</span><span>6</span><span>12</span><span>18</span><span>24</span>
               </span>
             </label>
-            <button type="button" class="link live-btn" id="hourLive">Use live clock</button>
+            <button type="button" class="link live-btn" id="hourLive" data-i18n="useLive">Use live clock</button>
             <ol>
-              <li>Scrub the dial — mark, buttons, and drop rings track the hue.</li>
-              <li>Click the drop zone or “add sample shot”.</li>
-              <li>Flip <strong>Mono only</strong> / previews, then <strong>Convert</strong>.</li>
+              <li data-i18n="demoStep1">Scrub the dial — mark, buttons, and drop rings track the hue.</li>
+              <li data-i18n="demoStep2">Click the drop zone or “add sample shot”.</li>
+              <li data-i18n-html="demoStep3">Flip <strong>Mono only</strong> / previews, then <strong>Convert</strong>.</li>
             </ol>
-            <p class="aside-muted">
+            <p class="aside-muted" data-i18n-html="demoAside">
               Real conversion needs the Tauri build +
               <a href="https://github.com/isamarin/luminat">luminat</a>
               <code>light</code>. Accent math is
@@ -315,8 +324,8 @@
 
       <section class="modules" id="modules" aria-labelledby="modules-title">
         <div class="section-head">
-          <h2 id="modules-title">Why so many raw files?</h2>
-          <p>
+          <h2 id="modules-title" data-i18n="modulesTitle">Why so many raw files?</h2>
+          <p data-i18n-html="modulesLede">
             One Light L16 shutter press is not one photo — it is a
             <strong>multi-camera capture</strong> packed into a single
             <code>.lri</code>. LRI Drop does not “multiply” frames; it
@@ -327,9 +336,9 @@
         <div class="modules-stage">
           <!-- Module array: adapted from openfusion Claude artifact
                https://claude.ai/code/artifact/6ccaac29-3827-4fd3-979f-86ef9bb263d6 -->
-          <div class="array-panel" id="array" aria-label="L16 module array — which lenses fire at each focal length">
+          <div class="array-panel" id="array" data-i18n-aria="arrayAria" aria-label="L16 module array — which lenses fire at each focal length">
             <div class="array-head">
-              <div class="array-title">
+              <div class="array-title" data-i18n-html="arrayTitle">
                 MODULE ARRAY · <b>which lenses fire at each focal length</b>
               </div>
               <div class="fired-readout" id="firedReadout">10 modules firing</div>
@@ -338,7 +347,7 @@
 
             <div class="slider-wrap">
               <div class="slider-top">
-                <div class="focal-val"><span id="focalVal">28</span> <span>mm equivalent</span></div>
+                <div class="focal-val"><span id="focalVal">28</span> <span data-i18n="mmEq">mm equivalent</span></div>
                 <div class="regime-hint" id="regimeHint">wide + mid</div>
               </div>
               <input
@@ -348,10 +357,11 @@
                 max="150"
                 value="28"
                 step="1"
+                data-i18n-aria="focalAria"
                 aria-label="Focal length — scrub which module banks fire"
               />
               <div class="tick-row" aria-hidden="true"><span>28</span><span>70</span><span>150</span></div>
-              <p class="array-caption">
+              <p class="array-caption" data-i18n-html="arrayCaption">
                 Measured on a live L16 (61 captures). Below ~70&nbsp;mm the wide row
                 (A) and mid row (B) expose; past it mid hands off to tele (C).
                 Reference module = widest that fired. Each lit cell becomes its own
@@ -361,32 +371,32 @@
           </div>
 
           <div class="modules-copy">
-            <h3>Separate frames from separate modules</h3>
-            <p>
+            <h3 data-i18n="modCopyTitle">Separate frames from separate modules</h3>
+            <p data-i18n-html="modCopyP">
               The L16 ships <strong>sixteen optical modules</strong> in three banks
               (A1–A5 · B1–B5 · C1–C6). A shutter press packs the active set into one
               <code>.lri</code> — not a stack of JPEGs, and not a fused “final” RAW.
               LRI Drop unpacks what the hardware already recorded.
             </p>
             <ul class="mod-facts">
-              <li>
+              <li data-i18n-html="factCount">
                 <strong>~10–11 DNGs per shot, not always 16</strong> —
                 only modules that fired write sensor data. Scrub the focal dial to
                 see the handoff.
               </li>
-              <li>
+              <li data-i18n-html="factDup">
                 <strong>Not duplicates</strong> —
                 each file is a different viewpoint / focal band / sensor. That is
                 the multi-aperture raw for Lightroom or research.
               </li>
-              <li>
+              <li data-i18n-html="factMono">
                 <strong>Mono plates</strong> —
                 <code>A2</code> and <code>C6</code> are monochrome (dashed cells).
                 Mono-only export keeps
                 <code>A2_mono.dng</code> / <code>C6_mono.dng</code>.
               </li>
             </ul>
-            <p class="aside-muted">
+            <p class="aside-muted" data-i18n-html="arrayCredit">
               Array UX from the
               <a href="https://claude.ai/code/artifact/6ccaac29-3827-4fd3-979f-86ef9bb263d6">openfusion artifact</a>
               · adapted for LRI Drop.
@@ -397,14 +407,14 @@
 
       <section class="how" id="how" aria-labelledby="how-title">
         <div class="section-head">
-          <h2 id="how-title">From capture to DNG</h2>
-          <p>Three short paths into the same queue.</p>
+          <h2 id="how-title" data-i18n="howTitle">From capture to DNG</h2>
+          <p data-i18n="howLede">Three short paths into the same queue.</p>
         </div>
         <div class="steps">
           <div class="step">
             <div class="step-icon" aria-hidden="true">↓</div>
-            <h3>Drop files</h3>
-            <p>
+            <h3 data-i18n="stepDrop">Drop files</h3>
+            <p data-i18n-html="stepDropP">
               Drag <code>.lri</code> onto the window. Each file is inspected for
               module count, focal length, and mono cameras before it sits ready
               in the queue.
@@ -412,8 +422,8 @@
           </div>
           <div class="step">
             <div class="step-icon" aria-hidden="true">usb</div>
-            <h3>Pull from Light</h3>
-            <p>
+            <h3 data-i18n="stepPull">Pull from Light</h3>
+            <p data-i18n-html="stepPullP">
               Connect L16 over USB. LRI Drop lists
               <code>/sdcard/DCIM/Camera/*.lri</code> via adb, pulls selected
               shots (with cache), then queues them like local drops.
@@ -421,8 +431,8 @@
           </div>
           <div class="step">
             <div class="step-icon" aria-hidden="true">→</div>
-            <h3>Convert</h3>
-            <p>
+            <h3 data-i18n="stepConv">Convert</h3>
+            <p data-i18n-html="stepConvP">
               <code>light::extract</code> writes
               <code>&lt;output&gt;/&lt;stem&gt;/*.dng</code>. Optional mono-only
               pass keeps A2/C6; PNG previews land under <code>mono/</code>.
@@ -433,45 +443,45 @@
 
       <section class="features" id="features" aria-labelledby="feat-title">
         <div class="section-head">
-          <h2 id="feat-title">Built for L16 workflows</h2>
-          <p>Fast shell around the same library as the fuller Luminat desktop app.</p>
+          <h2 id="feat-title" data-i18n="featTitle">Built for L16 workflows</h2>
+          <p data-i18n="featLede">Fast shell around the same library as the fuller Luminat desktop app.</p>
         </div>
         <div class="feat-grid">
           <div>
-            <h3>Per-module DNG</h3>
-            <p>Every optical module becomes its own Adobe DNG for Lightroom, Capture One, or raw pipelines.</p>
+            <h3 data-i18n="feat1t">Per-module DNG</h3>
+            <p data-i18n="feat1p">Every optical module becomes its own Adobe DNG for Lightroom, Capture One, or raw pipelines.</p>
           </div>
           <div>
-            <h3>Mono A2 / C6</h3>
-            <p>Export only mono channels as <code>A2_mono.dng</code> / <code>C6_mono.dng</code> with optional PNG previews.</p>
+            <h3 data-i18n="feat2t">Mono A2 / C6</h3>
+            <p data-i18n-html="feat2p">Export only mono channels as <code>A2_mono.dng</code> / <code>C6_mono.dng</code> with optional PNG previews.</p>
           </div>
           <div>
-            <h3>Camera queue</h3>
-            <p>adb status pill, remote list modal, multi-select pull, progress events while files move.</p>
+            <h3 data-i18n="feat3t">Camera queue</h3>
+            <p data-i18n="feat3p">adb status pill, remote list modal, multi-select pull, progress events while files move.</p>
           </div>
           <div>
-            <h3>Queue with progress</h3>
-            <p>Per-file cards: ready, pulling, running %, done with “open folder”, or error text.</p>
+            <h3 data-i18n="feat4t">Queue with progress</h3>
+            <p data-i18n="feat4p">Per-file cards: ready, pulling, running %, done with “open folder”, or error text.</p>
           </div>
           <div>
-            <h3>Living accent</h3>
-            <p>
+            <h3 data-i18n="feat5t">Living accent</h3>
+            <p data-i18n-html="feat5p">
               UI gold is not a fixed hex —
               <a href="https://github.com/isamarin/circahue">circahue</a> samples
               time, season, and latitude into CSS accent vars.
             </p>
           </div>
           <div>
-            <h3>Same light crate</h3>
-            <p>Parsing and extract come from luminat’s open <code>light</code> library — not a black-box converter.</p>
+            <h3 data-i18n="feat6t">Same light crate</h3>
+            <p data-i18n-html="feat6p">Parsing and extract come from luminat’s open <code>light</code> library — not a black-box converter.</p>
           </div>
         </div>
       </section>
 
       <section class="compare" aria-labelledby="cmp-title">
         <div class="section-head">
-          <h2 id="cmp-title">LRI Drop vs Luminat</h2>
-          <p>Same library, different product shells.</p>
+          <h2 id="cmp-title" data-i18n="cmpTitle">LRI Drop vs Luminat</h2>
+          <p data-i18n="cmpLede">Same library, different product shells.</p>
         </div>
         <div class="table-wrap">
           <table>
@@ -484,29 +494,29 @@
             </thead>
             <tbody>
               <tr>
-                <th scope="row">Focus</th>
-                <td>Fast LRI → DNG</td>
-                <td>Full desktop “own Lumen”</td>
+                <th scope="row" data-i18n="cmpFocus">Focus</th>
+                <td data-i18n="cmpFocusDrop">Fast LRI → DNG</td>
+                <td data-i18n="cmpFocusLum">Full desktop “own Lumen”</td>
               </tr>
               <tr>
-                <th scope="row">Fusion / render</th>
+                <th scope="row" data-i18n="cmpFusion">Fusion / render</th>
                 <td>—</td>
                 <td>libcp quality render</td>
               </tr>
               <tr>
-                <th scope="row">Camera (adb)</th>
+                <th scope="row" data-i18n="cmpCam">Camera (adb)</th>
                 <td>Yes</td>
-                <td>Yes (M2)</td>
+                <td data-i18n="cmpCamLum">Yes (M2)</td>
               </tr>
               <tr>
-                <th scope="row">Accent</th>
+                <th scope="row" data-i18n="cmpAccent">Accent</th>
                 <td>circahue</td>
-                <td>circahue (design origin)</td>
+                <td data-i18n="cmpAccentLum">circahue (design origin)</td>
               </tr>
               <tr>
-                <th scope="row">Best for</th>
-                <td>Batch extract, mono plates</td>
-                <td>Deep L16 studio workflow</td>
+                <th scope="row" data-i18n="cmpBest">Best for</th>
+                <td data-i18n="cmpBestDrop">Batch extract, mono plates</td>
+                <td data-i18n="cmpBestLum">Deep L16 studio workflow</td>
               </tr>
             </tbody>
           </table>
@@ -515,8 +525,8 @@
 
       <section class="download" id="download" aria-labelledby="dl-title">
         <div class="section-head">
-          <h2 id="dl-title">Download LRI Drop</h2>
-          <p>
+          <h2 id="dl-title" data-i18n="dlTitle">Download LRI Drop</h2>
+          <p data-i18n="dlLede">
             Free desktop app for photographers. Pick your system, unzip if needed,
             open — no account, no installer wizard.
           </p>
@@ -524,8 +534,8 @@
         <div class="dl-grid">
           <div class="dl-card">
             <h3>Mac</h3>
-            <p class="dl-meta">Apple Silicon (M1 / M2 / M3 / M4)</p>
-            <p>
+            <p class="dl-meta" data-i18n="dlMacMeta">Apple Silicon (M1 / M2 / M3 / M4)</p>
+            <p data-i18n-html="dlMacP">
               Download the zip, open
               <strong>LRI-Drop-macOS-Apple-Silicon</strong>.
               First time: <em>right-click → Open</em> (unsigned build).
@@ -535,13 +545,14 @@
               href="https://github.com/l16-camera/lri-drop/releases/latest/download/LRI-Drop-macOS-Apple-Silicon.zip"
               data-goatcounter-click="download-mac"
               data-goatcounter-title="Download · Mac"
+              data-i18n="dlMacBtn"
               >Download for Mac</a
             >
           </div>
           <div class="dl-card">
             <h3>Windows</h3>
-            <p class="dl-meta">64-bit PC</p>
-            <p>
+            <p class="dl-meta" data-i18n="dlWinMeta">64-bit PC</p>
+            <p data-i18n-html="dlWinP">
               Download and run
               <strong>LRI-Drop-Windows-x64.exe</strong>.
               If SmartScreen warns: <em>More info → Run anyway</em>.
@@ -551,13 +562,14 @@
               href="https://github.com/l16-camera/lri-drop/releases/latest/download/LRI-Drop-Windows-x64.zip"
               data-goatcounter-click="download-windows"
               data-goatcounter-title="Download · Windows"
+              data-i18n="dlWinBtn"
               >Download for Windows</a
             >
           </div>
           <div class="dl-card">
             <h3>Linux</h3>
-            <p class="dl-meta">x64 · Ubuntu / Debian-class</p>
-            <p>
+            <p class="dl-meta" data-i18n="dlLinMeta">x64 · Ubuntu / Debian-class</p>
+            <p data-i18n-html="dlLinP">
               Unzip, then
               <code>chmod +x LRI-Drop-Linux-x64</code> and run it.
               Needs WebKitGTK installed.
@@ -567,11 +579,12 @@
               href="https://github.com/l16-camera/lri-drop/releases/latest/download/LRI-Drop-Linux-x64.zip"
               data-goatcounter-click="download-linux"
               data-goatcounter-title="Download · Linux"
+              data-i18n="dlLinBtn"
               >Download for Linux</a
             >
           </div>
         </div>
-        <p class="aside-muted dl-note">
+        <p class="aside-muted dl-note" data-i18n-html="dlNote">
           All versions, release notes, and raw binaries:
           <a
             href="https://github.com/l16-camera/lri-drop/releases/latest"
@@ -588,8 +601,8 @@
 
       <section class="cta-band">
         <div>
-          <h2>Clone, link luminat, run.</h2>
-          <p>Rust, Node 20+, platform WebView deps. <code>adb</code> on PATH for camera features.</p>
+          <h2 data-i18n="ctaTitle">Clone, link luminat, run.</h2>
+          <p data-i18n-html="ctaP">Rust, Node 20+, platform WebView deps. <code>adb</code> on PATH for camera features.</p>
         </div>
         <pre class="code-block" tabindex="0"><code>git clone https://github.com/l16-camera/lri-drop.git
 cd lri-drop
@@ -608,7 +621,7 @@ npm run tauri dev</code></pre>
         <a href="https://github.com/isamarin/circahue">circahue</a>
         · isamarin × IGRS
       </p>
-      <p class="muted">This page is a static demo for GitHub Pages — not the native app binary.</p>
+      <p class="muted" data-i18n="footMuted">This page is a static demo for GitHub Pages — not the native app binary.</p>
     </footer>
 
     <script type="module" src="./app.js"></script>

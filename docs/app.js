@@ -7,6 +7,7 @@ import {
   createLightHueTicker,
   sampleLightHue,
 } from "./vendor/circahue.js";
+import { initI18n, t, onLangChange } from "./i18n.js";
 
 /** @typedef {'ready' | 'running' | 'done'} ItemStatus */
 
@@ -91,7 +92,7 @@ function paintHue(snap) {
     caption.textContent = `${snap.phaseLabel} · ${snap.accent.hex} · ${mode} · ${snap.caption}`;
   }
   if (hourOut && hourOverride == null) {
-    hourOut.textContent = "live";
+    hourOut.textContent = t("hourLiveOut");
   }
 }
 
@@ -125,7 +126,7 @@ function setHourOverride(/** @type {number | null} */ h) {
       dial.value = String(sampleLightHue(HUE_OPTS).hour);
     }
     const hourOut = document.getElementById("hourOut");
-    if (hourOut) hourOut.textContent = "live";
+    if (hourOut) hourOut.textContent = t("hourLiveOut");
   } else {
     ticker?.stop();
     ticker = null;
@@ -151,7 +152,7 @@ function renderQueue() {
     live.hidden = true;
     cards.innerHTML = "";
     convertBtn.disabled = true;
-    convertBtn.textContent = "Convert";
+    convertBtn.textContent = t("convert");
     return;
   }
 
@@ -161,10 +162,11 @@ function renderQueue() {
   const doneCount = queue.filter((q) => q.status === "done").length;
   const running = queue.some((q) => q.status === "running");
 
-  countEl.textContent = `${queue.length} file${queue.length === 1 ? "" : "s"}`;
+  countEl.textContent =
+    queue.length === 1 ? t("filesOne") : t("filesMany", { n: queue.length });
   statsEl.innerHTML = [
-    doneCount ? `<span class="ok">${doneCount} done</span>` : "",
-    running ? `<span class="run">working…</span>` : "",
+    doneCount ? `<span class="ok">${t("statDone", { n: doneCount })}</span>` : "",
+    running ? `<span class="run">${t("statWorking")}</span>` : "",
   ]
     .filter(Boolean)
     .join("");
@@ -178,15 +180,15 @@ function renderQueue() {
       let meta = "";
       if (item.status === "ready") {
         meta = onlyMono
-          ? `${item.monoCount || item.imageCount} mono modules ready`
-          : `${item.imageCount} modules ready`;
+          ? t("monoReady", { n: item.monoCount || item.imageCount })
+          : t("modulesReady", { n: item.imageCount });
       } else if (item.status === "running") {
-        meta = `extract · ${Math.round(item.progress * 100)}%`;
+        meta = t("extractPct", { n: Math.round(item.progress * 100) });
       } else if (item.status === "done") {
         const n = onlyMono ? item.monoCount || 0 : item.imageCount;
         const monoNote =
           !onlyMono && item.monoCount ? ` · ${item.monoCount} mono` : "";
-        meta = `<button type="button" class="link" data-reveal="${item.id}">${n} DNG${monoNote} → open</button>`;
+        meta = `<button type="button" class="link" data-reveal="${item.id}">${t("openFolder", { n, mono: monoNote })}</button>`;
       }
 
       return `
@@ -195,11 +197,11 @@ function renderQueue() {
             <div class="name-row">
               <span class="dot"></span>
               <strong>${item.name}</strong>
-              ${item.fromCamera ? '<span class="chip cam">camera</span>' : ""}
+              ${item.fromCamera ? `<span class="chip cam">${t("chipCamera")}</span>` : ""}
               ${item.hasMono ? `<span class="chip mono">mono ${item.monoCams}</span>` : ""}
               ${item.focal ? `<span class="chip">${item.focal}</span>` : ""}
             </div>
-            <button type="button" class="icon-btn" data-remove="${item.id}" aria-label="Remove">×</button>
+            <button type="button" class="icon-btn" data-remove="${item.id}" aria-label="${t("removeAria")}">×</button>
           </div>
           <div class="bar-wrap">
             <div class="bar" style="transform: scaleX(${item.status === "done" ? 1 : item.progress || 0})"></div>
@@ -212,8 +214,8 @@ function renderQueue() {
   const convertible = queue.some((q) => q.status === "ready");
   convertBtn.disabled = busy || !convertible;
   convertBtn.textContent = busy
-    ? "Converting…"
-    : `Convert ${queue.filter((q) => q.status === "ready").length || ""}`.trim();
+    ? t("converting")
+    : t("convert");
 }
 
 function addSample() {
@@ -248,11 +250,11 @@ function addSample() {
   const title = document.getElementById("dropTitle");
   stack?.classList.add("bounce");
   zone?.classList.add("active");
-  if (title) title.textContent = "Sample added";
+  if (title) title.textContent = t("dropSampleAdded");
   setTimeout(() => {
     stack?.classList.remove("bounce");
     zone?.classList.remove("active");
-    if (title) title.textContent = "Drop .lri files here";
+    if (title) title.textContent = t("dropTitle");
   }, 450);
 
   renderQueue();
@@ -336,7 +338,10 @@ function initModuleArray() {
 
     const label = document.createElement("div");
     label.className = "label";
-    label.innerHTML = `<b>Row ${r.id}</b>${r.name} · ${r.role}`;
+    const roleKey = r.role === "wide" ? "rowWide" : r.role === "mid" ? "rowMid" : "rowTele";
+    label.innerHTML = `<b>${t("rowLabel", { id: r.id })}</b>${r.name} · ${t(roleKey)}`;
+    label.dataset.rowId = r.id;
+    label.dataset.rowRole = r.role;
     row.appendChild(label);
 
     const cells = document.createElement("div");
@@ -375,10 +380,10 @@ function initModuleArray() {
     let fired = [];
     if (f <= 70) {
       fired = [...rows[0].cams, ...rows[1].cams];
-      regimeHint.textContent = "wide + mid";
+      regimeHint.textContent = t("regimeWide");
     } else {
       fired = [...rows[1].cams, ...rows[2].cams];
-      regimeHint.textContent = "mid + tele";
+      regimeHint.textContent = t("regimeTele");
     }
 
     const ref = widestRef(fired);
@@ -388,15 +393,34 @@ function initModuleArray() {
       el.classList.toggle("ref", c === ref);
     }
     firedReadout.textContent = ref
-      ? `${fired.length} modules firing · ref ${ref}`
-      : `${fired.length} modules firing`;
+      ? t("firingRef", { n: fired.length, ref })
+      : t("firing", { n: fired.length });
+  }
+
+  function relabelRows() {
+    rowsEl.querySelectorAll(".label").forEach((label) => {
+      if (!(label instanceof HTMLElement)) return;
+      const id = label.dataset.rowId;
+      const role = label.dataset.rowRole;
+      if (!id || !role) return;
+      const roleKey = role === "wide" ? "rowWide" : role === "mid" ? "rowMid" : "rowTele";
+      const mm = role === "wide" ? "28 mm" : role === "mid" ? "70 mm" : "150 mm";
+      label.innerHTML = `<b>${t("rowLabel", { id })}</b>${mm} · ${t(roleKey)}`;
+    });
+    update();
   }
 
   focal.addEventListener("input", update);
   update();
+  onLangChange(relabelRows);
 }
 
 function init() {
+  initI18n();
+  onLangChange(() => {
+    renderQueue();
+  });
+
   const dial = document.getElementById("hourDial");
   if (dial instanceof HTMLInputElement) {
     dial.value = String(sampleLightHue(HUE_OPTS).hour);
@@ -435,17 +459,17 @@ function init() {
   document.getElementById("monoPreviews")?.addEventListener("change", renderQueue);
 
   document.getElementById("cards")?.addEventListener("click", (e) => {
-    const t = e.target;
-    if (!(t instanceof HTMLElement)) return;
+    const el = e.target;
+    if (!(el instanceof HTMLElement)) return;
     const removeId =
-      t.getAttribute("data-remove") ||
-      t.closest("[data-remove]")?.getAttribute("data-remove");
+      el.getAttribute("data-remove") ||
+      el.closest("[data-remove]")?.getAttribute("data-remove");
     if (removeId) {
       removeItem(removeId);
       return;
     }
-    if (t.getAttribute("data-reveal")) {
-      t.textContent = "demo — no local folder";
+    if (el.getAttribute("data-reveal")) {
+      el.textContent = t("revealDemo");
     }
   });
 
@@ -458,14 +482,14 @@ function init() {
     try {
       await navigator.clipboard.writeText(text);
       const prev = btn.textContent;
-      btn.textContent = "Copied";
+      btn.textContent = t("letterCopied");
       btn.classList.add("copied");
       window.setTimeout(() => {
-        btn.textContent = prev;
+        btn.textContent = t("letterCopy");
         btn.classList.remove("copied");
       }, 1600);
     } catch {
-      btn.textContent = "Copy failed";
+      btn.textContent = t("letterCopyFail");
     }
   });
 
