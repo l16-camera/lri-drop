@@ -53,11 +53,11 @@
       </a>
 
       <nav class="nav-links" aria-label="Page">
+        <a href="#owners">For owners</a>
         <a href="#demo">Demo</a>
         <a href="#modules">Why 16 DNGs</a>
         <a href="#how">How it works</a>
         <a href="#download">Download</a>
-        <a href="#features">Features</a>
       </nav>
 
       <div class="nav-end">
@@ -72,6 +72,17 @@
         <a class="btn ghost" href="https://github.com/l16-camera/lri-drop">GitHub</a>
       </div>
     </header>
+
+    <aside class="dispatch" aria-label="Message for L16 owners">
+      <div class="dispatch-inner">
+        <span class="dispatch-kicker">For L16 owners</span>
+        <p>
+          Your <code>/lightcal</code> factory dump is unique to the sensors in
+          this body. The calibration rig is gone. Pull is read-only — no root.
+        </p>
+        <a class="dispatch-jump" href="#owners">Read the letter</a>
+      </div>
+    </aside>
 
     <main id="top">
       <section class="hero">
@@ -97,6 +108,53 @@
           <li><span>Camera</span> USB + adb pull</li>
           <li><span>Why many files</span> 1 LRI = up to 16 sensors</li>
         </ul>
+      </section>
+
+      <section class="letter" id="owners" aria-labelledby="owners-title">
+        <article class="letter-sheet">
+          <p class="letter-kicker">A note to anyone still shooting the L16</p>
+          <h2 id="owners-title">For L16 owners</h2>
+          <div class="letter-body">
+            <p>
+              Your camera holds something no phone will give you: the raw planes
+              of every module that took part in a shot, before any fusion, inside
+              the <code>.lri</code> container. Two of those modules — A2 at
+              28&nbsp;mm and C6 at 150&nbsp;mm — are panchromatic AR1335 sensors
+              with no colour filter array, which Light never documented anywhere.
+            </p>
+            <p>
+              It also holds its own factory calibration in
+              <code>/lightcal</code>: per-module colour under three illuminants,
+              geometry, module coverage, and a hot-pixel map measured on those
+              exact sensors. Nothing can regenerate it — the rig is gone and so
+              is the company. Dumping it is read-only and needs no root:
+            </p>
+            <div class="pull-cmd">
+              <pre class="code-block" id="lightcalCmd"><code>adb pull /lightcal ./lightcal-backup</code></pre>
+              <button type="button" class="ghost-pill copy-cmd" id="copyLightcal" data-copy="adb pull /lightcal ./lightcal-backup">
+                Copy
+              </button>
+            </div>
+            <p>
+              Sharing yours builds a corpus that has never existed. It would
+              answer questions a single unit cannot: whether the panchromatic
+              modules always sit at A2 and C6, how much of the calibration is
+              unit-specific rather than model-wide, and whether the format
+              changed across firmware revisions.
+            </p>
+          </div>
+          <p class="letter-foot">
+            If you dump it,
+            <a
+              href="https://github.com/l16-camera/lri-drop/issues/new?title=lightcal%20backup"
+              data-goatcounter-click="lightcal-issue"
+              data-goatcounter-title="Open lightcal issue"
+              >open an issue</a
+            >
+            and attach the folder (or a link). One unit is a specimen. Several
+            is a corpus.
+          </p>
+        </article>
       </section>
 
       <section class="demo" id="demo" aria-labelledby="demo-title">

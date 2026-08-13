@@ -377,6 +377,7 @@ main {
 }
 
 .demo,
+.letter,
 .modules,
 .how,
 .features,
@@ -384,6 +385,133 @@ main {
 .download,
 .cta-band {
   margin-top: 3.5rem;
+}
+
+.letter {
+  scroll-margin-top: 5.5rem;
+}
+
+/* ── Dispatch strip + letter to L16 owners ───────────────────────────── */
+.dispatch {
+  border-bottom: 1px solid color-mix(in srgb, var(--gold) 32%, var(--line));
+  background:
+    linear-gradient(
+      90deg,
+      rgba(var(--light-hue-rgb), 0.14),
+      transparent 58%
+    ),
+    color-mix(in srgb, var(--bg1) 94%, transparent);
+}
+
+.dispatch-inner {
+  width: min(1120px, calc(100% - 2.5rem));
+  margin: 0 auto;
+  padding: 0.72rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 1.1rem;
+}
+
+.dispatch-kicker {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+.dispatch p {
+  margin: 0;
+  flex: 1 1 16rem;
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+.dispatch-jump {
+  flex-shrink: 0;
+  font-size: 0.82rem;
+  font-weight: 650;
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+}
+
+.dispatch-jump:hover {
+  text-decoration: none;
+  border-bottom-color: var(--gold);
+}
+
+.letter-sheet {
+  max-width: 46rem;
+  padding: 1.6rem 1.7rem 1.45rem;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--gold);
+  background:
+    linear-gradient(180deg, rgba(var(--light-hue-rgb), 0.06), transparent 38%),
+    color-mix(in srgb, var(--bg1) 92%, transparent);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+}
+
+.letter-kicker {
+  margin: 0 0 0.55rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.letter-sheet h2 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.55rem, 3.2vw, 2rem);
+  letter-spacing: -0.025em;
+}
+
+.letter-body p {
+  margin: 0 0 0.95rem;
+  color: color-mix(in srgb, var(--text) 88%, var(--muted));
+  font-size: 1.02rem;
+  line-height: 1.62;
+}
+
+.letter-body p:last-of-type {
+  margin-bottom: 0;
+}
+
+.pull-cmd {
+  position: relative;
+  margin: 0.15rem 0 1.05rem;
+}
+
+.pull-cmd .code-block {
+  margin: 0;
+  padding-right: 5.2rem;
+  font-size: 0.86rem;
+}
+
+.copy-cmd {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+}
+
+.copy-cmd.copied {
+  border-color: color-mix(in srgb, var(--ok) 45%, transparent);
+  color: color-mix(in srgb, var(--ok) 85%, var(--text));
+  background: var(--ok-soft);
+}
+
+.letter-foot {
+  margin: 1.15rem 0 0;
+  padding-top: 0.95rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.88rem;
+  color: var(--muted);
 }
 
 /* ── L16 modules explainer (openfusion module array) ─────────────────── */
@@ -1546,6 +1674,19 @@ tbody tr:last-child td {
 }
 
 @media (max-width: 520px) {
+  .dispatch-inner {
+    width: calc(100% - 1.5rem);
+  }
+
+  .letter-sheet {
+    padding: 1.2rem 1.05rem 1.15rem;
+  }
+
+  .pull-cmd .code-block {
+    padding-right: 1rem;
+    padding-top: 2.6rem;
+  }
+
   .nav {
     padding: 0.7rem 1rem;
   }

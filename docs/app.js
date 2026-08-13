@@ -451,6 +451,24 @@ function init() {
 
   document.getElementById("exportForm")?.addEventListener("submit", (e) => e.preventDefault());
 
+  document.getElementById("copyLightcal")?.addEventListener("click", async (e) => {
+    const btn = e.currentTarget;
+    if (!(btn instanceof HTMLButtonElement)) return;
+    const text = btn.dataset.copy || "";
+    try {
+      await navigator.clipboard.writeText(text);
+      const prev = btn.textContent;
+      btn.textContent = "Copied";
+      btn.classList.add("copied");
+      window.setTimeout(() => {
+        btn.textContent = prev;
+        btn.classList.remove("copied");
+      }, 1600);
+    } catch {
+      btn.textContent = "Copy failed";
+    }
+  });
+
   renderQueue();
 }
 
