@@ -6,6 +6,33 @@
   import { invoke } from "@tauri-apps/api/core";
   import { listen } from "@tauri-apps/api/event";
   import { getCurrentWindow } from "@tauri-apps/api/window";
+  import {
+    LOCALE_OPTS,
+    STORAGE_KEY,
+    detectLocale,
+    formatError,
+    formatPullNote,
+    tr,
+  } from "./i18n.js";
+
+  let locale = $state(detectLocale(new URLSearchParams(location.search).get("lang")));
+  const t = $derived((key, vars) => tr(locale, key, vars));
+
+  $effect(() => {
+    document.documentElement.lang = locale;
+    try {
+      localStorage.setItem(STORAGE_KEY, locale);
+    } catch {
+      /* private mode */
+    }
+    try {
+      getCurrentWindow()
+        .setTitle(tr(locale, "winTitle"))
+        .catch(() => {});
+    } catch {
+      /* browser preview — no Tauri window */
+    }
+  });
 
   /** @typedef {'idle' | 'ready' | 'running' | 'done' | 'error' | 'pulling'} ItemStatus */
 
@@ -21,7 +48,7 @@
    * @property {string} [outputDir]
    * @property {number} progress
    * @property {string} [camera]
-   * @property {string} [focal]
+   * @property {number} [focal]
    * @property {boolean} [hasMono]
    * @property {string[]} [monoCams]
    * @property {boolean} [fromCamera]
@@ -114,7 +141,7 @@
     try {
       await refreshCamera();
       if (!camStatus?.light && !(camStatus?.devices?.length)) {
-        camError = "No camera online — connect Light L16 via USB";
+        camError = "errNoCamera";
         remoteList = [];
         return;
       }
@@ -163,7 +190,7 @@
         status: "pulling",
         progress: 0,
         fromCamera: true,
-        camera: "adb pull…",
+        camera: "",
       };
       queue = [...queue, item];
 
@@ -192,7 +219,7 @@
             ? {
                 ...q,
                 status: "ready",
-                focal: summary.focal_length != null ? `${summary.focal_length} mm` : null,
+                focal: summary.focal_length != null ? summary.focal_length : null,
                 hasMono: monoFromSummary(summary).present,
                 monoCams: monoFromSummary(summary).cameras,
                 imageCount: summary.image_count,
@@ -208,7 +235,7 @@
 
     camBusy = false;
     camPanel = false;
-    toast(`Added ${picks.length} from camera`);
+    toast(tr(locale, "toastAddedCam", { n: picks.length }));
   }
 
   function monoFromSummary(summary) {
@@ -224,7 +251,7 @@
   async function addPaths(paths) {
     const lris = (paths ?? []).filter(isLri);
     if (!lris.length) {
-      toast("Drop .lri files");
+      toast(tr(locale, "toastDropLri"));
       return;
     }
 
@@ -250,7 +277,7 @@
             ? {
                 ...q,
                 status: "ready",
-                focal: summary.focal_length != null ? `${summary.focal_length} mm` : null,
+                focal: summary.focal_length != null ? summary.focal_length : null,
                 hasMono: monoFromSummary(summary).present,
                 monoCams: monoFromSummary(summary).cameras,
                 imageCount: summary.image_count,
@@ -408,10 +435,22 @@
       />
       <div>
         <h1>LRI Drop</h1>
-        <p>Light Raw → DNG · drop or from camera</p>
+        <p>{t("brandSub")}</p>
       </div>
     </div>
     <div class="top-actions">
+      <div class="lang-switch" role="group" aria-label={t("langAria")}>
+        {#each LOCALE_OPTS as opt (opt.id)}
+          <button
+            type="button"
+            aria-pressed={locale === opt.id}
+            class:is-on={locale === opt.id}
+            onclick={() => (locale = opt.id)}
+          >
+            {opt.label}
+          </button>
+        {/each}
+      </div>
       <button
         class="cam-pill"
         class:online={lightOnline}
@@ -420,22 +459,22 @@
         onclick={openCameraPanel}
         title={lightOnline
           ? `${camStatus?.light?.model ?? "L16"} · ${camStatus?.light?.serial}`
-          : "No Light camera (adb)"}
+          : t("camTitleOffline")}
       >
         <span class="cam-dot"></span>
         {#if lightOnline}
           Light {camStatus?.light?.model || "L16"}
         {:else if camStatus && !camStatus.adb_ok}
-          no adb
+          {t("camNoAdb")}
         {:else}
-          camera offline
+          {t("camOffline")}
         {/if}
       </button>
-      <button class="ghost" type="button" onclick={chooseOutput} title={outputRoot ?? "Pick folder"}>
+      <button class="ghost" type="button" onclick={chooseOutput} title={outputRoot ?? t("outputPick")}>
         {#if outputRoot}
           <span class="out-label">{baseName(outputRoot)}</span>
         {:else}
-          Output folder…
+          {t("outputPick")}
         {/if}
       </button>
     </div>
@@ -459,13 +498,13 @@
         <div class="file-ghost g2"></div>
         <div class="file-main">.lri</div>
       </div>
-      <h2>{dragging ? "Release to add" : "Drop .lri files here"}</h2>
+      <h2>{dragging ? t("dropRelease") : t("dropTitle")}</h2>
       <p class="hint">
-        or
+        {t("dropHintBefore")}
         <button class="inline-link" type="button" onclick={openCameraPanel} disabled={!lightOnline && camStatus?.adb_ok === false}>
-          pick from Light camera
+          {t("dropPickCam")}
         </button>
-        · mono as <code>A2_mono.dng</code>
+        {t("dropHintAfter")} <code>A2_mono.dng</code>
       </p>
     </div>
   </section>
@@ -474,12 +513,12 @@
     <label class="toggle">
       <input type="checkbox" bind:checked={onlyMono} />
       <span class="track"><span class="knob"></span></span>
-      <span>Mono only (A2 / C6)</span>
+      <span>{t("toggleMono")}</span>
     </label>
     <label class="toggle">
       <input type="checkbox" bind:checked={monoPreviews} />
       <span class="track"><span class="knob"></span></span>
-      <span>Mono PNG previews</span>
+      <span>{t("togglePrev")}</span>
     </label>
     <div class="spacer"></div>
     <button
@@ -489,9 +528,11 @@
       onclick={convertAll}
     >
       {#if busy}
-        Converting…
+        {t("converting")}
+      {:else if readyCount}
+        {t("convertN", { n: readyCount })}
       {:else}
-        Convert {readyCount || ""}
+        {t("convert")}
       {/if}
     </button>
   </section>
@@ -503,18 +544,18 @@
   <section class="queue" aria-live="polite">
     {#if queue.length === 0}
       <p class="empty" in:fade={{ duration: 200 }}>
-        Queue empty — drop files or open camera
+        {t("queueEmpty")}
       </p>
     {:else}
       <div class="queue-head">
-        <span>{queue.length} file{queue.length === 1 ? "" : "s"}</span>
+        <span>{queue.length === 1 ? t("filesOne") : t("filesMany", { n: queue.length })}</span>
         <span class="stats">
-          {#if doneCount}<span class="ok">{doneCount} done</span>{/if}
-          {#if errCount}<span class="err">{errCount} err</span>{/if}
-          {#if running}<span class="run">working…</span>{/if}
+          {#if doneCount}<span class="ok">{t("statDone", { n: doneCount })}</span>{/if}
+          {#if errCount}<span class="err">{t("statErr", { n: errCount })}</span>{/if}
+          {#if running}<span class="run">{t("statWorking")}</span>{/if}
         </span>
         {#if doneCount}
-          <button class="link" type="button" onclick={clearDone}>Clear done</button>
+          <button class="link" type="button" onclick={clearDone}>{t("clearDone")}</button>
         {/if}
       </div>
 
@@ -530,16 +571,16 @@
                 <span class="dot"></span>
                 <strong>{item.name}</strong>
                 {#if item.fromCamera}
-                  <span class="chip cam">camera</span>
+                  <span class="chip cam">{t("chipCamera")}</span>
                 {/if}
                 {#if item.hasMono}
-                  <span class="chip mono">mono {item.monoCams?.join("+")}</span>
+                  <span class="chip mono">{t("chipMono", { cams: item.monoCams?.join("+") })}</span>
                 {/if}
                 {#if item.focal}
-                  <span class="chip">{item.focal}</span>
+                  <span class="chip">{t("unitMm", { n: item.focal })}</span>
                 {/if}
               </div>
-              <button class="icon-btn" type="button" onclick={() => removeItem(item.id)} aria-label="Remove">
+              <button class="icon-btn" type="button" onclick={() => removeItem(item.id)} aria-label={t("removeAria")}>
                 ×
               </button>
             </div>
@@ -554,19 +595,26 @@
 
             <div class="card-meta">
               {#if item.status === "pulling"}
-                Pulling from camera… {item.camera ?? ""}
+                {t("statusPulling")}
+                {formatPullNote(locale, item.camera)}
               {:else if item.status === "idle"}
-                Reading…
+                {t("statusReading")}
               {:else if item.status === "ready"}
-                {item.imageCount ?? "?"} modules ready
+                {t("modulesReady", { n: item.imageCount ?? "?" })}
               {:else if item.status === "running"}
-                {item.camera ?? "…"} · {Math.round((item.progress || 0) * 100)}%
+                {t("statusRunning", {
+                  camera: item.camera && item.camera !== "…" ? item.camera : "…",
+                  n: Math.round((item.progress || 0) * 100),
+                })}
               {:else if item.status === "done"}
                 <button class="link" type="button" onclick={() => reveal(item.outputDir)}>
-                  {item.imageCount} DNG{#if item.monoCount} · {item.monoCount} mono{/if} → open
+                  {t("openFolder", {
+                    n: item.imageCount,
+                    mono: item.monoCount ? t("openMono", { n: item.monoCount }) : "",
+                  })}
                 </button>
               {:else if item.status === "error"}
-                <span class="err-text">{item.error}</span>
+                <span class="err-text">{formatError(locale, item.error)}</span>
               {/if}
             </div>
           </li>
@@ -591,12 +639,12 @@
     >
       <div class="modal-head">
         <div>
-          <h2>Light camera</h2>
+          <h2>{t("camModalTitle")}</h2>
           <p>
             {#if lightOnline}
               {camStatus?.light?.model || "L16"} · {camStatus?.light?.serial}
             {:else}
-              Searching via adb…
+              {t("camSearching")}
             {/if}
           </p>
         </div>
@@ -604,16 +652,16 @@
       </div>
 
       {#if camLoading}
-        <div class="modal-empty">Listing /sdcard/DCIM/Camera…</div>
+        <div class="modal-empty">{t("camListing")}</div>
       {:else if camError}
-        <div class="modal-empty err-text">{camError}</div>
+        <div class="modal-empty err-text">{formatError(locale, camError)}</div>
       {:else}
         <div class="modal-toolbar">
-          <span>{remoteList.length} captures · {selectedCount} selected</span>
+          <span>{t("camCaptures", { n: remoteList.length, sel: selectedCount })}</span>
           <div class="modal-tools">
-            <button class="link" type="button" onclick={selectAllRemote}>All</button>
-            <button class="link" type="button" onclick={selectNoneRemote}>None</button>
-            <button class="link" type="button" onclick={openCameraPanel}>Refresh</button>
+            <button class="link" type="button" onclick={selectAllRemote}>{t("camAll")}</button>
+            <button class="link" type="button" onclick={selectNoneRemote}>{t("camNone")}</button>
+            <button class="link" type="button" onclick={openCameraPanel}>{t("camRefresh")}</button>
           </div>
         </div>
         <ul class="remote-list">
@@ -634,7 +682,7 @@
       {/if}
 
       <div class="modal-foot">
-        <button class="ghost" type="button" onclick={() => (camPanel = false)} disabled={camBusy}>Cancel</button>
+        <button class="ghost" type="button" onclick={() => (camPanel = false)} disabled={camBusy}>{t("camCancel")}</button>
         <button
           class="primary"
           type="button"
@@ -642,9 +690,11 @@
           onclick={pullSelectedToQueue}
         >
           {#if camBusy}
-            Pulling…
+            {t("camPulling")}
+          {:else if selectedCount}
+            {t("camAddN", { n: selectedCount })}
           {:else}
-            Add {selectedCount || ""} to queue
+            {t("camAdd")}
           {/if}
         </button>
       </div>
@@ -679,7 +729,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
   }
 
   .brand {
@@ -713,7 +764,34 @@
   .top-actions {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
     gap: 0.5rem;
+  }
+
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.12rem;
+    padding: 0.14rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .lang-switch button {
+    font-size: 0.68rem;
+    font-weight: 650;
+    letter-spacing: 0.04em;
+    padding: 0.28rem 0.48rem;
+    border-radius: 999px;
+    color: var(--muted);
+  }
+
+  .lang-switch button.is-on,
+  .lang-switch button[aria-pressed="true"] {
+    color: var(--text);
+    background: color-mix(in srgb, var(--gold) 18%, transparent);
   }
 
   .cam-pill {

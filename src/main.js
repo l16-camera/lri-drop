@@ -1,7 +1,12 @@
 import { mount } from "svelte";
 import { applyCssVars, createLightHueTicker } from "@igrs/circahue";
 import App from "./App.svelte";
+import { detectLocale } from "./i18n.js";
 import "./app.css";
+
+document.documentElement.lang = detectLocale(
+  new URLSearchParams(location.search).get("lang"),
+);
 
 /** Living brand accent from clock / season / latitude (circahue). */
 const hueTicker = createLightHueTicker(

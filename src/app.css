@@ -27,9 +27,19 @@
   --err-soft: rgba(224, 92, 92, 0.15);
   --mono: #c8ccd4;
   --radius: 20px;
-  --font: "SF Pro Display", "Segoe UI", system-ui, -apple-system, sans-serif;
-  --mono-font: "SF Mono", "Menlo", ui-monospace, monospace;
+  --font: "SF Pro Display", "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+    "Noto Sans JP", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono-font: "SF Mono", "Menlo", "IBM Plex Mono", ui-monospace, monospace;
   color-scheme: dark;
+}
+
+html[lang="ja"] {
+  --font: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic",
+    system-ui, sans-serif;
+}
+
+html[lang="ru"] {
+  --font: "SF Pro Display", "Segoe UI", system-ui, sans-serif;
 }
 
 * {
