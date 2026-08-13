@@ -28,20 +28,44 @@
     <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="./icons/favicon-16.png" />
     <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
-    <link
-      rel="preload"
-      href="./fonts/outfit-latin.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="./fonts/ibm-plex-mono-400-latin.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
+    <script>
+      (function () {
+        var s = "en";
+        try {
+          var q = new URLSearchParams(location.search).get("lang");
+          if (q === "en" || q === "fr" || q === "ja" || q === "ru") s = q;
+          else {
+            var stored = localStorage.getItem("lri-lang");
+            if (stored === "en" || stored === "fr" || stored === "ja" || stored === "ru") {
+              s = stored;
+            } else {
+              var n = (navigator.language || "").toLowerCase();
+              if (n.indexOf("ja") === 0) s = "ja";
+              else if (n.indexOf("ru") === 0 || n.indexOf("uk") === 0 || n.indexOf("be") === 0)
+                s = "ru";
+              else if (n.indexOf("fr") === 0) s = "fr";
+            }
+          }
+          if (s !== "en") document.documentElement.lang = s;
+        } catch (e) {}
+        function preload(href) {
+          var l = document.createElement("link");
+          l.rel = "preload";
+          l.href = href;
+          l.as = "font";
+          l.type = "font/woff2";
+          l.crossOrigin = "anonymous";
+          document.head.appendChild(l);
+        }
+        if (s === "ru") {
+          preload("./fonts/manrope-latin.woff2");
+          preload("./fonts/manrope-cyrillic.woff2");
+        } else {
+          preload("./fonts/outfit-latin.woff2");
+        }
+        preload("./fonts/ibm-plex-mono-400-latin.woff2");
+      })();
+    </script>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
