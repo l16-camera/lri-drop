@@ -99,6 +99,7 @@
     </aside>
 
     <main id="top">
+      <article class="page-copy">
       <section class="hero">
         <p class="eyebrow">Tauri 2 · Svelte 5 · open L16 tooling</p>
         <h1>
@@ -125,7 +126,7 @@
       </section>
 
       <section class="letter" id="owners" aria-labelledby="owners-title">
-        <article class="letter-sheet">
+        <div class="letter-sheet">
           <p class="letter-kicker">A note to anyone still shooting the L16</p>
           <h2 id="owners-title">For L16 owners</h2>
           <div class="letter-body">
@@ -168,7 +169,7 @@
             and attach the folder (or a link). One unit is a specimen. Several
             is a corpus.
           </p>
-        </article>
+        </div>
       </section>
 
       <section class="demo" id="demo" aria-labelledby="demo-title">
@@ -400,7 +401,7 @@
           <p>Three short paths into the same queue.</p>
         </div>
         <div class="steps">
-          <article class="step">
+          <div class="step">
             <div class="step-icon" aria-hidden="true">↓</div>
             <h3>Drop files</h3>
             <p>
@@ -408,8 +409,8 @@
               module count, focal length, and mono cameras before it sits ready
               in the queue.
             </p>
-          </article>
-          <article class="step">
+          </div>
+          <div class="step">
             <div class="step-icon" aria-hidden="true">usb</div>
             <h3>Pull from Light</h3>
             <p>
@@ -417,8 +418,8 @@
               <code>/sdcard/DCIM/Camera/*.lri</code> via adb, pulls selected
               shots (with cache), then queues them like local drops.
             </p>
-          </article>
-          <article class="step">
+          </div>
+          <div class="step">
             <div class="step-icon" aria-hidden="true">→</div>
             <h3>Convert</h3>
             <p>
@@ -426,7 +427,7 @@
               <code>&lt;output&gt;/&lt;stem&gt;/*.dng</code>. Optional mono-only
               pass keeps A2/C6; PNG previews land under <code>mono/</code>.
             </p>
-          </article>
+          </div>
         </div>
       </section>
 
@@ -436,34 +437,34 @@
           <p>Fast shell around the same library as the fuller Luminat desktop app.</p>
         </div>
         <div class="feat-grid">
-          <article>
+          <div>
             <h3>Per-module DNG</h3>
             <p>Every optical module becomes its own Adobe DNG for Lightroom, Capture One, or raw pipelines.</p>
-          </article>
-          <article>
+          </div>
+          <div>
             <h3>Mono A2 / C6</h3>
             <p>Export only mono channels as <code>A2_mono.dng</code> / <code>C6_mono.dng</code> with optional PNG previews.</p>
-          </article>
-          <article>
+          </div>
+          <div>
             <h3>Camera queue</h3>
             <p>adb status pill, remote list modal, multi-select pull, progress events while files move.</p>
-          </article>
-          <article>
+          </div>
+          <div>
             <h3>Queue with progress</h3>
             <p>Per-file cards: ready, pulling, running %, done with “open folder”, or error text.</p>
-          </article>
-          <article>
+          </div>
+          <div>
             <h3>Living accent</h3>
             <p>
               UI gold is not a fixed hex —
               <a href="https://github.com/isamarin/circahue">circahue</a> samples
               time, season, and latitude into CSS accent vars.
             </p>
-          </article>
-          <article>
+          </div>
+          <div>
             <h3>Same light crate</h3>
             <p>Parsing and extract come from luminat’s open <code>light</code> library — not a black-box converter.</p>
-          </article>
+          </div>
         </div>
       </section>
 
@@ -521,7 +522,7 @@
           </p>
         </div>
         <div class="dl-grid">
-          <article class="dl-card">
+          <div class="dl-card">
             <h3>Mac</h3>
             <p class="dl-meta">Apple Silicon (M1 / M2 / M3 / M4)</p>
             <p>
@@ -536,8 +537,8 @@
               data-goatcounter-title="Download · Mac"
               >Download for Mac</a
             >
-          </article>
-          <article class="dl-card">
+          </div>
+          <div class="dl-card">
             <h3>Windows</h3>
             <p class="dl-meta">64-bit PC</p>
             <p>
@@ -552,8 +553,8 @@
               data-goatcounter-title="Download · Windows"
               >Download for Windows</a
             >
-          </article>
-          <article class="dl-card">
+          </div>
+          <div class="dl-card">
             <h3>Linux</h3>
             <p class="dl-meta">x64 · Ubuntu / Debian-class</p>
             <p>
@@ -568,7 +569,7 @@
               data-goatcounter-title="Download · Linux"
               >Download for Linux</a
             >
-          </article>
+          </div>
         </div>
         <p class="aside-muted dl-note">
           All versions, release notes, and raw binaries:
@@ -596,6 +597,7 @@ cd lri-drop
 npm install
 npm run tauri dev</code></pre>
       </section>
+      </article>
     </main>
 
     <footer class="site-foot">
