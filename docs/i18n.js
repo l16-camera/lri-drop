@@ -1,10 +1,10 @@
 /**
  * One-URL i18n for the GitHub Pages landing.
  * HTML source stays English (what crawlers index).
- * ja / ru are a client switch — same canonical, no extra SEO URLs.
+ * ja / ru / fr are a client switch — same canonical, no extra SEO URLs.
  */
 
-export const LOCALES = ["en", "ja", "ru"];
+export const LOCALES = ["en", "ja", "ru", "fr"];
 
 const STORAGE_KEY = "lri-lang";
 
@@ -516,6 +516,175 @@ export const STRINGS = {
     ctaP: "Rust, Node 20+, WebView платформы. <code>adb</code> — для камеры.",
     footMuted: "Это статическое демо на GitHub Pages, не сам нативный бинарник.",
   },
+
+  fr: {
+    metaTitle: "LRI Drop — Light Raw → Adobe DNG",
+    metaDesc:
+      "App bureau pour Light L16 : déposez des .lri, tirez depuis l’appareil en adb, exportez un Adobe DNG par module — y compris le mono A2/C6.",
+    navAria: "Page",
+    navOwners: "Aux propriétaires",
+    navDemo: "Démo",
+    navModules: "Pourquoi 16 DNG",
+    navHow: "Comment ça marche",
+    navDownload: "Télécharger",
+    langAria: "Langue",
+    hueTitle: "Accent circadien · circahue",
+    dispatchAria: "Message aux propriétaires L16",
+    dispatchKicker: "Aux propriétaires L16",
+    dispatchBody:
+      "Le dump d’usine <code>/lightcal</code> est unique aux capteurs de <em>ce</em> boîtier. Le banc de calib n’existe plus. Le pull est en lecture seule — pas besoin de root.",
+    dispatchRead: "Lire la lettre",
+    heroEyebrow: "Tauri 2 · Svelte 5 · outillage L16 ouvert",
+    heroTitle: "Déposez une prise Light.<br /><em>Repartez avec du DNG.</em>",
+    heroLede:
+      "LRI Drop est un petit convertisseur bureau pour les fichiers <code>.lri</code> du <strong>Light L16</strong>. Il inspecte les modules, tire les vues depuis l’appareil en <code>adb</code>, et écrit un Adobe DNG par module — jeu complet ou mono seulement (A2 / C6), aperçus PNG en option. L’accent de marque suit <a href=\"https://github.com/isamarin/circahue\">circahue</a> (la même idée de lumière vivante que Luminat).",
+    heroCtaDl: "Télécharger gratuitement",
+    heroCtaDemo: "Essayer la démo",
+    heroMetaFormatL: "Format",
+    heroMetaFormat: ".lri → .dng par module",
+    heroMetaCamL: "Appareil",
+    heroMetaCam: "USB + adb pull",
+    heroMetaWhyL: "Pourquoi tant de fichiers",
+    heroMetaWhy: "1 LRI = jusqu’à 16 capteurs",
+    letterKicker: "À celles et ceux qui shootent encore au L16",
+    letterTitle: "Aux propriétaires L16",
+    letterP1:
+      "Votre appareil garde ce qu’aucun téléphone ne donnera : les plans bruts de chaque module qui a pris part à la vue, avant toute fusion, dans le conteneur <code>.lri</code>. Deux de ces modules — A2 à 28&nbsp;mm et C6 à 150&nbsp;mm — sont des AR1335 panchromatiques sans matrice de Bayer. Light ne l’a documenté nulle part.",
+    letterP2:
+      "Il garde aussi sa calib d’usine dans <code>/lightcal</code> : couleur par module sous trois illuminants, géométrie, couverture, carte de pixels chauds mesurée sur <em>ces</em> capteurs. Rien ne peut la régénérer — le banc a disparu, la boîte aussi. Le dump est en lecture seule, sans root :",
+    letterCopy: "Copier",
+    letterCopied: "Copié",
+    letterCopyFail: "Échec",
+    letterP3:
+      "Partager le vôtre construit un corpus qui n’a jamais existé. Il répondrait à des questions qu’un seul boîtier ne peut pas : les panchros sont-ils toujours en A2 et C6, quelle part de la calib est propre à l’exemplaire plutôt qu’au modèle, le format a-t-il bougé selon les firmwares.",
+    letterFoot:
+      "Si vous dumpez, <a href=\"https://github.com/l16-camera/lri-drop/issues/new?title=lightcal%20backup\" data-goatcounter-click=\"lightcal-issue\" data-goatcounter-title=\"Open lightcal issue\">ouvrez une issue</a> et joignez le dossier (ou un lien). Un boîtier est un spécimen. Plusieurs, un corpus.",
+    demoTitle: "Coquille interactive",
+    demoLede:
+      "Les mêmes commandes que l’app bureau — bascules, cartes de file, progression. Glissez le cadran d’heure pour faire passer l’accent <strong>circahue</strong> sur une journée (minuit → zénith → coucher → nuit).",
+    demoAria: "Démo UI LRI Drop",
+    demoSub: "Light Raw → DNG · dépôt ou depuis l’appareil",
+    demoExports: "Exports",
+    dropAria: "Zone de dépôt démo — cliquez pour ajouter un échantillon",
+    dropTitle: "Déposez les .lri ici",
+    dropHintBefore: "ou",
+    dropAdd: "ajouter un échantillon",
+    dropHintAfter: "· mono en",
+    dropSampleAdded: "Échantillon ajouté",
+    toggleMono: "Mono seulement (A2 / C6)",
+    togglePrev: "Aperçus PNG mono",
+    convert: "Convertir",
+    converting: "Conversion…",
+    queueEmpty: "File vide — déposez des fichiers ou ouvrez l’appareil",
+    filesOne: "1 fichier",
+    filesMany: "{n} fichiers",
+    statDone: "{n} faits",
+    statWorking: "en cours…",
+    clearDone: "Retirer les faits",
+    chipCamera: "appareil",
+    modulesReady: "{n} modules prêts",
+    monoReady: "{n} mono prêts",
+    extractPct: "extract · {n}%",
+    openFolder: "{n} DNG{mono} → ouvrir",
+    revealDemo: "démo — pas de dossier local",
+    removeAria: "Retirer",
+    hueAsideTitle: "Accent CircaHue",
+    hourScrub: "Heure",
+    hourLiveOut: "live",
+    hourAria: "Forcer l’heure locale pour la couleur d’accent",
+    useLive: "Horloge réelle",
+    demoStep1: "Tournez le cadran — marque, boutons et anneaux suivent la teinte.",
+    demoStep2: "Cliquez la zone ou « ajouter un échantillon ».",
+    demoStep3: "Basculez <strong>Mono seulement</strong> / aperçus, puis <strong>Convertir</strong>.",
+    demoAside:
+      "La vraie conversion demande le build Tauri + <a href=\"https://github.com/isamarin/luminat\">luminat</a> <code>light</code>. Le calcul d’accent est <a href=\"https://github.com/isamarin/circahue\">@igrs/circahue</a> (TS pur, zéro DOM).",
+    modulesTitle: "Pourquoi autant de fichiers raw ?",
+    modulesLede:
+      "Un déclenchement Light L16 n’est pas une photo — c’est une <strong>prise multi-caméras</strong> dans un seul <code>.lri</code>. LRI Drop ne « multiplie » pas les vues ; il <em>dépaquette</em> ce que le matériel a déjà enregistré.",
+    arrayAria: "Matrice de modules L16 — quelles optiques tirent à chaque focale",
+    arrayTitle: "MODULE ARRAY · <b>quelles optiques tirent à chaque focale</b>",
+    firing: "{n} modules tirent",
+    firingRef: "{n} modules tirent · réf. {ref}",
+    mmEq: "mm équivalent",
+    regimeWide: "grand-angle + milieu",
+    regimeTele: "milieu + télé",
+    rowLabel: "Rangée {id}",
+    rowWide: "grand-angle",
+    rowMid: "milieu",
+    rowTele: "télé",
+    focalAria: "Focale — quelles banques de modules tirent",
+    arrayCaption:
+      "Mesuré sur un L16 réel (61 prises). Sous ~70&nbsp;mm, les rangées grand-angle (A) et milieu (B) exposent ; au-delà, le milieu passe au télé (C). Module de référence = le plus large qui a tiré. Chaque cellule allumée devient son propre DNG dans LRI Drop.",
+    modCopyTitle: "Des vues séparées, des modules séparés",
+    modCopyP:
+      "Le L16 embarque <strong>seize modules optiques</strong> en trois banques (A1–A5 · B1–B5 · C1–C6). Un déclenchement emballe l’ensemble actif dans un <code>.lri</code> — pas une pile de JPEG, pas un RAW « final » fusionné. LRI Drop dépaquette ce que le matériel a déjà enregistré.",
+    factCount:
+      "<strong>~10–11 DNG par vue, pas toujours 16</strong> — seuls les modules qui ont tiré écrivent des données. Le cadran de focale montre le passage de relais.",
+    factDup:
+      "<strong>Pas des doublons</strong> — chaque fichier est un autre point de vue / bande focale / capteur. C’est le raw multi-ouverture pour Lightroom ou la recherche.",
+    factMono:
+      "<strong>Plaques mono</strong> — <code>A2</code> et <code>C6</code> sont monochromes (cellules en pointillés). L’export mono seul garde <code>A2_mono.dng</code> / <code>C6_mono.dng</code>.",
+    arrayCredit:
+      "UX de la matrice : <a href=\"https://claude.ai/code/artifact/6ccaac29-3827-4fd3-979f-86ef9bb263d6\">openfusion artifact</a> · adapté pour LRI Drop.",
+    howTitle: "De la prise au DNG",
+    howLede: "Trois chemins courts vers la même file.",
+    stepDrop: "Déposer des fichiers",
+    stepDropP:
+      "Glissez des <code>.lri</code> sur la fenêtre. Chaque fichier est inspecté (modules, focale, monos) avant de s’asseoir dans la file.",
+    stepPull: "Tirer depuis le Light",
+    stepPullP:
+      "Branchez le L16 en USB. LRI Drop liste <code>/sdcard/DCIM/Camera/*.lri</code> via adb, tire les vues choisies (avec cache), puis les enfile comme un dépôt local.",
+    stepConv: "Convertir",
+    stepConvP:
+      "<code>light::extract</code> écrit <code>&lt;output&gt;/&lt;stem&gt;/*.dng</code>. L’option mono seul garde A2/C6 ; les aperçus PNG vont sous <code>mono/</code>.",
+    featTitle: "Fait pour les flux L16",
+    featLede: "Coquille rapide autour de la même bibliothèque que Luminat bureau.",
+    feat1t: "DNG par module",
+    feat1p: "Chaque module optique devient son Adobe DNG pour Lightroom, Capture One ou un pipeline raw.",
+    feat2t: "Mono A2 / C6",
+    feat2p: "N’exporter que les canaux mono en <code>A2_mono.dng</code> / <code>C6_mono.dng</code>, aperçus PNG en option.",
+    feat3t: "File caméra",
+    feat3p: "Pastille adb, liste distante, pull multi-sélection, progression pendant le transfert.",
+    feat4t: "File avec progression",
+    feat4p: "Une carte par fichier : prêt, en cours, %, terminé avec « ouvrir le dossier », ou le texte d’erreur.",
+    feat5t: "Accent vivant",
+    feat5p:
+      "L’or de l’UI n’est pas un hex fixe — <a href=\"https://github.com/isamarin/circahue\">circahue</a> échantillonne l’heure, la saison et la latitude en variables CSS.",
+    feat6t: "Le même crate light",
+    feat6p: "Analyse et extract viennent de la bibliothèque ouverte <code>light</code> de luminat — pas une boîte noire.",
+    cmpTitle: "LRI Drop vs Luminat",
+    cmpLede: "Même bibliothèque, coquilles différentes.",
+    cmpFocus: "Focus",
+    cmpFocusDrop: "LRI → DNG rapide",
+    cmpFocusLum: "Bureau complet « own Lumen »",
+    cmpFusion: "Fusion / rendu",
+    cmpCam: "Appareil (adb)",
+    cmpCamLum: "Oui (M2)",
+    cmpAccent: "Accent",
+    cmpAccentLum: "circahue (origine du design)",
+    cmpBest: "Idéal pour",
+    cmpBestDrop: "Extract par lots, plaques mono",
+    cmpBestLum: "Studio L16 en profondeur",
+    dlTitle: "Télécharger LRI Drop",
+    dlLede: "App bureau gratuite pour photographes. Choisissez le système, dézippez si besoin, ouvrez — pas de compte, pas d’assistant d’install.",
+    dlMacMeta: "Apple Silicon (M1 / M2 / M3 / M4)",
+    dlMacP:
+      "Téléchargez le zip, ouvrez <strong>LRI-Drop-macOS-Apple-Silicon</strong>. La première fois : <em>clic droit → Ouvrir</em> (build non signé).",
+    dlMacBtn: "Télécharger pour Mac",
+    dlWinMeta: "PC 64 bits",
+    dlWinP:
+      "Téléchargez et lancez <strong>LRI-Drop-Windows-x64.exe</strong>. Si SmartScreen râle : <em>Plus d’infos → Exécuter quand même</em>.",
+    dlWinBtn: "Télécharger pour Windows",
+    dlLinMeta: "x64 · Ubuntu / Debian",
+    dlLinP:
+      "Dézippez, puis <code>chmod +x LRI-Drop-Linux-x64</code> et lancez. Il faut WebKitGTK.",
+    dlLinBtn: "Télécharger pour Linux",
+    dlNote:
+      "Toutes les versions et notes : <a href=\"https://github.com/l16-camera/lri-drop/releases/latest\" data-goatcounter-click=\"releases-page\" data-goatcounter-title=\"Open Releases\">GitHub Releases</a>. Le pull depuis un L16 demande <a href=\"https://developer.android.com/tools/releases/platform-tools\">adb</a> dans le PATH. Compiler depuis les sources ? Voir plus bas.",
+    ctaTitle: "Clone, lier luminat, lancer.",
+    ctaP: "Rust, Node 20+, WebView de la plateforme. <code>adb</code> pour la caméra.",
+    footMuted: "Cette page est une démo statique GitHub Pages — pas le binaire natif.",
+  },
 };
 
 /** @type {string} */
@@ -561,6 +730,7 @@ export function detectLocale() {
   const nav = (navigator.language || "en").toLowerCase();
   if (nav.startsWith("ja")) return "ja";
   if (nav.startsWith("ru") || nav.startsWith("uk") || nav.startsWith("be")) return "ru";
+  if (nav.startsWith("fr")) return "fr";
   return "en";
 }
 
