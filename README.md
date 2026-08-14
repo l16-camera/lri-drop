@@ -3,7 +3,7 @@
 [![CI](https://github.com/l16-camera/lri-drop/actions/workflows/ci.yml/badge.svg)](https://github.com/l16-camera/lri-drop/actions/workflows/ci.yml)
 [![Pages](https://github.com/l16-camera/lri-drop/actions/workflows/pages.yml/badge.svg)](https://github.com/l16-camera/lri-drop/actions/workflows/pages.yml)
 
-**[Live demo / landing →](https://l16-camera.github.io/lri-drop/)** — interactive UI shell, [circahue](https://github.com/isamarin/circahue) accent dial, **why 16 DNGs** module map, product walkthrough.
+**[Live demo / landing →](https://lridrop.isamarin.xyz/)** — interactive UI shell, [circahue](https://github.com/isamarin/circahue) accent dial, **why 16 DNGs** module map, product walkthrough.
 
 Desktop **Tauri 2 + Svelte 5** converter for **Light L16**: drop `.lri` captures (or pull over **adb**), inspect modules, export **per-module** Adobe **DNG** — full set or **mono only** (A2 / C6) with optional PNG previews and a progress queue.
 
@@ -87,7 +87,7 @@ Workflow: [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 | Mono previews | `mono/A2.png` |
 | Reveal | Open output folder (OS file manager) |
 
-**Why many DNGs?** L16 banks A1–A5 · B1–B5 · C1–C6 — separate sensors/focals, not duplicates. See the [landing module map](https://l16-camera.github.io/lri-drop/#modules).
+**Why many DNGs?** L16 banks A1–A5 · B1–B5 · C1–C6 — separate sensors/focals, not duplicates. See the [landing module map](https://lridrop.isamarin.xyz/#modules).
 
 Camera pull cache (macOS): `~/Library/Caches/lri-drop/camera/` (platform cache dirs elsewhere).
 

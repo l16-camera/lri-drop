@@ -1,0 +1,28 @@
+name: Deploy landing (Luma)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "deploy/**"
+      - ".github/workflows/luma.yml"
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Publish to Luma
+    runs-on: ubuntu-latest
+    environment: luma
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install deploy key
+        env:
+          LUMA_SSH_KEY: ${{ secrets.LUMA_SSH_KEY }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$LUMA_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          cp deploy/known_hosts ~/.ssh/known_hosts
+      - name: Rsync to Luma
+        run: bash deploy/deploy.sh
