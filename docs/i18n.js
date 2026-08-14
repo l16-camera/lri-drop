@@ -30,7 +30,7 @@ export const STRINGS = {
     heroEyebrow: "Tauri 2 · Svelte 5 · open L16 tooling",
     heroTitle: "Drop a Light capture.<br /><em>Walk away with DNG.</em>",
     heroLede:
-      "LRI Drop is a small desktop converter for <strong>Light L16</strong> <code>.lri</code> files. It inspects modules, pulls shots from the camera over <code>adb</code>, and writes per-module Adobe DNG — full set or mono only (A2 / C6) with optional PNG previews. Brand chrome follows a <a href=\"https://github.com/isamarin/circahue\">circahue</a> circadian accent (same living light idea as Luminat).",
+      "LRI Drop is a small desktop converter for <strong>Light L16</strong> <code>.lri</code> files. It inspects modules, pulls shots from the camera over <code>adb</code>, and writes per-module Adobe DNG — full set or mono only (A2 / C6) with optional PNG previews. Brand chrome follows a <a href=\"https://github.com/isamarin/circahue\">circahue</a> circadian accent (same living light idea as Lightmotiv).",
     heroCtaDl: "Download free",
     heroCtaDemo: "Try the UI demo",
     heroMetaFormatL: "Format",
@@ -90,7 +90,7 @@ export const STRINGS = {
     demoStep2: "Click the drop zone or “add sample shot”.",
     demoStep3: "Flip <strong>Mono only</strong> / previews, then <strong>Convert</strong>.",
     demoAside:
-      "Real conversion needs the Tauri build + <a href=\"https://github.com/isamarin/luminat\">luminat</a> <code>light</code>. Accent math is <a href=\"https://github.com/isamarin/circahue\">@igrs/circahue</a> (pure TS, zero DOM deps).",
+      "Real conversion needs the Tauri build + <a href=\"https://github.com/l16-camera/lightmotiv\">lightmotiv</a> <code>light</code>. Accent math is <a href=\"https://github.com/isamarin/circahue\">@igrs/circahue</a> (pure TS, zero DOM deps).",
     modulesTitle: "Why so many raw files?",
     modulesLede:
       "One Light L16 shutter press is not one photo — it is a <strong>multi-camera capture</strong> packed into a single <code>.lri</code>. LRI Drop does not “multiply” frames; it <em>unpacks</em> what the hardware already recorded.",
@@ -131,7 +131,7 @@ export const STRINGS = {
     stepConvP:
       "<code>light::extract</code> writes <code>&lt;output&gt;/&lt;stem&gt;/*.dng</code>. Optional mono-only pass keeps A2/C6; PNG previews land under <code>mono/</code>.",
     featTitle: "Built for L16 workflows",
-    featLede: "Fast shell around the same library as the fuller Luminat desktop app.",
+    featLede: "Fast shell around the same library as the fuller Lightmotiv desktop app.",
     feat1t: "Per-module DNG",
     feat1p: "Every optical module becomes its own Adobe DNG for Lightroom, Capture One, or raw pipelines.",
     feat2t: "Mono A2 / C6",
@@ -144,8 +144,8 @@ export const STRINGS = {
     feat5p:
       "UI gold is not a fixed hex — <a href=\"https://github.com/isamarin/circahue\">circahue</a> samples time, season, and latitude into CSS accent vars.",
     feat6t: "Same light crate",
-    feat6p: "Parsing and extract come from luminat’s open <code>light</code> library — not a black-box converter.",
-    cmpTitle: "LRI Drop vs Luminat",
+    feat6p: "Parsing and extract come from Lightmotiv’s open <code>light</code> library — not a black-box converter.",
+    cmpTitle: "LRI Drop vs Lightmotiv",
     cmpLede: "Same library, different product shells.",
     cmpFocus: "Focus",
     cmpFocusDrop: "Fast LRI → DNG",
@@ -174,7 +174,7 @@ export const STRINGS = {
     dlLinBtn: "Download for Linux",
     dlNote:
       "All versions, release notes, and raw binaries: <a href=\"https://github.com/l16-camera/lri-drop/releases/latest\" data-goatcounter-click=\"releases-page\" data-goatcounter-title=\"Open Releases\">GitHub Releases</a>. Camera pull from a Light L16 needs <a href=\"https://developer.android.com/tools/releases/platform-tools\">adb</a> on your PATH. Prefer building from source? See setup below.",
-    ctaTitle: "Clone, link luminat, run.",
+    ctaTitle: "Clone, link lightmotiv, run.",
     ctaP: "Rust, Node 20+, platform WebView deps. <code>adb</code> on PATH for camera features.",
     footMuted: "This page is a static demo for GitHub Pages — not the native app binary.",
   },
@@ -199,7 +199,7 @@ export const STRINGS = {
     heroEyebrow: "Tauri 2 · Svelte 5 · 開かれた L16 ツール",
     heroTitle: "Light の撮影をドロップ。<br /><em>DNG を持って帰る。</em>",
     heroLede:
-      "LRI Drop は <strong>Light L16</strong> の <code>.lri</code> 向けの小さなデスクトップ変換アプリです。モジュールを検査し、<code>adb</code> でカメラから取り込み、モジュールごとの Adobe DNG を書き出します。全セット、またはモノクロのみ（A2 / C6）。任意で PNG プレビュー。ブランド色は <a href=\"https://github.com/isamarin/circahue\">circahue</a> の概日アクセントです（Luminat と同じ「生きた光」）。",
+      "LRI Drop は <strong>Light L16</strong> の <code>.lri</code> 向けの小さなデスクトップ変換アプリです。モジュールを検査し、<code>adb</code> でカメラから取り込み、モジュールごとの Adobe DNG を書き出します。全セット、またはモノクロのみ（A2 / C6）。任意で PNG プレビュー。ブランド色は <a href=\"https://github.com/isamarin/circahue\">circahue</a> の概日アクセントです（Lightmotiv と同じ「生きた光」）。",
     heroCtaDl: "無料で入手",
     heroCtaDemo: "UI デモを試す",
     heroMetaFormatL: "形式",
@@ -259,7 +259,7 @@ export const STRINGS = {
     demoStep2: "ドロップゾーンか「サンプルを追加」をクリック。",
     demoStep3: "<strong>モノクロのみ</strong> / プレビューを切り替えて <strong>変換</strong>。",
     demoAside:
-      "本物の変換には Tauri ビルドと <a href=\"https://github.com/isamarin/luminat\">luminat</a> の <code>light</code> が必要です。色の計算は <a href=\"https://github.com/isamarin/circahue\">@igrs/circahue</a>（純 TS、DOM 依存なし）。",
+      "本物の変換には Tauri ビルドと <a href=\"https://github.com/l16-camera/lightmotiv\">lightmotiv</a> の <code>light</code> が必要です。色の計算は <a href=\"https://github.com/isamarin/circahue\">@igrs/circahue</a>（純 TS、DOM 依存なし）。",
     modulesTitle: "なぜ RAW がこんなに多い？",
     modulesLede:
       "Light L16 のシャッター一回は一枚の写真ではありません。<code>.lri</code> に詰まった <strong>マルチカメラ撮影</strong> です。LRI Drop はフレームを「増やして」いません。ハードウェアが既に撮ったものを <em>ほどきます</em>。",
@@ -300,7 +300,7 @@ export const STRINGS = {
     stepConvP:
       "<code>light::extract</code> が <code>&lt;output&gt;/&lt;stem&gt;/*.dng</code> を書きます。モノクロのみなら A2/C6。PNG プレビューは <code>mono/</code> へ。",
     featTitle: "L16 の作業向け",
-    featLede: "より大きな Luminat デスクトップと同じライブラリの、速い殻。",
+    featLede: "より大きな Lightmotiv デスクトップと同じライブラリの、速い殻。",
     feat1t: "モジュールごと DNG",
     feat1p: "光学モジュールごとに Adobe DNG。Lightroom、Capture One、RAW パイプラインへ。",
     feat2t: "モノクロ A2 / C6",
@@ -313,8 +313,8 @@ export const STRINGS = {
     feat5p:
       "UI の金は固定 hex ではない — <a href=\"https://github.com/isamarin/circahue\">circahue</a> が時刻・季節・緯度を CSS 変数にする。",
     feat6t: "同じ light crate",
-    feat6p: "解析と書き出しは luminat の公開 <code>light</code> — 黒箱のコンバータではない。",
-    cmpTitle: "LRI Drop と Luminat",
+    feat6p: "解析と書き出しは Lightmotiv の公開 <code>light</code> — 黒箱のコンバータではない。",
+    cmpTitle: "LRI Drop と Lightmotiv",
     cmpLede: "同じライブラリ、違う殻。",
     cmpFocus: "焦点",
     cmpFocusDrop: "速い LRI → DNG",
@@ -343,7 +343,7 @@ export const STRINGS = {
     dlLinBtn: "Linux 用を入手",
     dlNote:
       "全バージョンとリリースノート: <a href=\"https://github.com/l16-camera/lri-drop/releases/latest\" data-goatcounter-click=\"releases-page\" data-goatcounter-title=\"Open Releases\">GitHub Releases</a>。L16 からの取り込みには PATH 上の <a href=\"https://developer.android.com/tools/releases/platform-tools\">adb</a>。ソースからビルドする場合は下を参照。",
-    ctaTitle: "clone、luminat をリンク、実行。",
+    ctaTitle: "clone、lightmotiv をリンク、実行。",
     ctaP: "Rust、Node 20+、各 OS の WebView。<code>adb</code> はカメラ機能用。",
     footMuted: "これは GitHub Pages の静的デモであり、ネイティブアプリ本体ではありません。",
   },
@@ -368,7 +368,7 @@ export const STRINGS = {
     heroEyebrow: "Tauri 2 · Svelte 5 · открытый софт для L16",
     heroTitle: "Бросьте снимок Light.<br /><em>Уходите с DNG.</em>",
     heroLede:
-      "LRI Drop — маленький десктоп-конвертер <code>.lri</code> для <strong>Light L16</strong>. Смотрит модули, забирает кадры с камеры по <code>adb</code>, пишет Adobe DNG с каждого модуля — полный набор или только моно (A2 / C6), по желанию PNG-превью. Цвет оболочки — циркадный акцент <a href=\"https://github.com/isamarin/circahue\">circahue</a> (та же живая световая идея, что у Luminat).",
+      "LRI Drop — маленький десктоп-конвертер <code>.lri</code> для <strong>Light L16</strong>. Смотрит модули, забирает кадры с камеры по <code>adb</code>, пишет Adobe DNG с каждого модуля — полный набор или только моно (A2 / C6), по желанию PNG-превью. Цвет оболочки — циркадный акцент <a href=\"https://github.com/isamarin/circahue\">circahue</a> (та же живая световая идея, что у Lightmotiv).",
     heroCtaDl: "Скачать бесплатно",
     heroCtaDemo: "Демо интерфейса",
     heroMetaFormatL: "Формат",
@@ -428,7 +428,7 @@ export const STRINGS = {
     demoStep2: "Клик по зоне или «добавить образец».",
     demoStep3: "Переключите <strong>только моно</strong> / превью, затем <strong>Конвертировать</strong>.",
     demoAside:
-      "Настоящая конвертация — сборка Tauri + <a href=\"https://github.com/isamarin/luminat\">luminat</a> <code>light</code>. Математика акцента — <a href=\"https://github.com/isamarin/circahue\">@igrs/circahue</a> (чистый TS, без DOM).",
+      "Настоящая конвертация — сборка Tauri + <a href=\"https://github.com/l16-camera/lightmotiv\">lightmotiv</a> <code>light</code>. Математика акцента — <a href=\"https://github.com/isamarin/circahue\">@igrs/circahue</a> (чистый TS, без DOM).",
     modulesTitle: "Почему столько сырых файлов?",
     modulesLede:
       "Одно нажатие затвора Light L16 — это не один снимок, а <strong>съёмка несколькими камерами</strong> в одном <code>.lri</code>. LRI Drop не «размножает» кадры; он <em>распаковывает</em> то, что железо уже записало.",
@@ -469,7 +469,7 @@ export const STRINGS = {
     stepConvP:
       "<code>light::extract</code> пишет <code>&lt;output&gt;/&lt;stem&gt;/*.dng</code>. Опция «только моно» оставляет A2/C6; PNG-превью — в <code>mono/</code>.",
     featTitle: "Под работу с L16",
-    featLede: "Быстрая оболочка вокруг той же библиотеки, что полный Luminat.",
+    featLede: "Быстрая оболочка вокруг той же библиотеки, что полный Lightmotiv.",
     feat1t: "DNG с модуля",
     feat1p: "Каждый оптический модуль — свой Adobe DNG для Lightroom, Capture One или сырого пайплайна.",
     feat2t: "Моно A2 / C6",
@@ -482,8 +482,8 @@ export const STRINGS = {
     feat5p:
       "Золото интерфейса — не фиксированный hex: <a href=\"https://github.com/isamarin/circahue\">circahue</a> берёт время, сезон и широту в CSS-переменные.",
     feat6t: "Тот же crate light",
-    feat6p: "Разбор и выгрузка — из открытой библиотеки <code>light</code> в luminat, не чёрный ящик.",
-    cmpTitle: "LRI Drop и Luminat",
+    feat6p: "Разбор и выгрузка — из открытой библиотеки <code>light</code> в lightmotiv, не чёрный ящик.",
+    cmpTitle: "LRI Drop и Lightmotiv",
     cmpLede: "Одна библиотека, разные оболочки.",
     cmpFocus: "Фокус",
     cmpFocusDrop: "Быстрый LRI → DNG",
@@ -512,7 +512,7 @@ export const STRINGS = {
     dlLinBtn: "Скачать для Linux",
     dlNote:
       "Все версии и заметки: <a href=\"https://github.com/l16-camera/lri-drop/releases/latest\" data-goatcounter-click=\"releases-page\" data-goatcounter-title=\"Open Releases\">GitHub Releases</a>. Съём с Light L16 требует <a href=\"https://developer.android.com/tools/releases/platform-tools\">adb</a> в PATH. Собирать из исходников? См. ниже.",
-    ctaTitle: "Clone, линк luminat, запуск.",
+    ctaTitle: "Clone, линк lightmotiv, запуск.",
     ctaP: "Rust, Node 20+, WebView платформы. <code>adb</code> — для камеры.",
     footMuted: "Это статическое демо на GitHub Pages, не сам нативный бинарник.",
   },
@@ -537,7 +537,7 @@ export const STRINGS = {
     heroEyebrow: "Tauri 2 · Svelte 5 · outillage L16 ouvert",
     heroTitle: "Déposez une prise Light.<br /><em>Repartez avec du DNG.</em>",
     heroLede:
-      "LRI Drop est un petit convertisseur bureau pour les fichiers <code>.lri</code> du <strong>Light L16</strong>. Il inspecte les modules, tire les vues depuis l’appareil en <code>adb</code>, et écrit un Adobe DNG par module — jeu complet ou mono seulement (A2 / C6), aperçus PNG en option. L’accent de marque suit <a href=\"https://github.com/isamarin/circahue\">circahue</a> (la même idée de lumière vivante que Luminat).",
+      "LRI Drop est un petit convertisseur bureau pour les fichiers <code>.lri</code> du <strong>Light L16</strong>. Il inspecte les modules, tire les vues depuis l’appareil en <code>adb</code>, et écrit un Adobe DNG par module — jeu complet ou mono seulement (A2 / C6), aperçus PNG en option. L’accent de marque suit <a href=\"https://github.com/isamarin/circahue\">circahue</a> (la même idée de lumière vivante que Lightmotiv).",
     heroCtaDl: "Télécharger gratuitement",
     heroCtaDemo: "Essayer la démo",
     heroMetaFormatL: "Format",
@@ -597,7 +597,7 @@ export const STRINGS = {
     demoStep2: "Cliquez la zone ou « ajouter un échantillon ».",
     demoStep3: "Basculez <strong>Mono seulement</strong> / aperçus, puis <strong>Convertir</strong>.",
     demoAside:
-      "La vraie conversion demande le build Tauri + <a href=\"https://github.com/isamarin/luminat\">luminat</a> <code>light</code>. Le calcul d’accent est <a href=\"https://github.com/isamarin/circahue\">@igrs/circahue</a> (TS pur, zéro DOM).",
+      "La vraie conversion demande le build Tauri + <a href=\"https://github.com/l16-camera/lightmotiv\">lightmotiv</a> <code>light</code>. Le calcul d’accent est <a href=\"https://github.com/isamarin/circahue\">@igrs/circahue</a> (TS pur, zéro DOM).",
     modulesTitle: "Pourquoi autant de fichiers raw ?",
     modulesLede:
       "Un déclenchement Light L16 n’est pas une photo — c’est une <strong>prise multi-caméras</strong> dans un seul <code>.lri</code>. LRI Drop ne « multiplie » pas les vues ; il <em>dépaquette</em> ce que le matériel a déjà enregistré.",
@@ -638,7 +638,7 @@ export const STRINGS = {
     stepConvP:
       "<code>light::extract</code> écrit <code>&lt;output&gt;/&lt;stem&gt;/*.dng</code>. L’option mono seul garde A2/C6 ; les aperçus PNG vont sous <code>mono/</code>.",
     featTitle: "Fait pour les flux L16",
-    featLede: "Coquille rapide autour de la même bibliothèque que Luminat bureau.",
+    featLede: "Coquille rapide autour de la même bibliothèque que Lightmotiv bureau.",
     feat1t: "DNG par module",
     feat1p: "Chaque module optique devient son Adobe DNG pour Lightroom, Capture One ou un pipeline raw.",
     feat2t: "Mono A2 / C6",
@@ -651,8 +651,8 @@ export const STRINGS = {
     feat5p:
       "L’or de l’UI n’est pas un hex fixe — <a href=\"https://github.com/isamarin/circahue\">circahue</a> échantillonne l’heure, la saison et la latitude en variables CSS.",
     feat6t: "Le même crate light",
-    feat6p: "Analyse et extract viennent de la bibliothèque ouverte <code>light</code> de luminat — pas une boîte noire.",
-    cmpTitle: "LRI Drop vs Luminat",
+    feat6p: "Analyse et extract viennent de la bibliothèque ouverte <code>light</code> de Lightmotiv — pas une boîte noire.",
+    cmpTitle: "LRI Drop vs Lightmotiv",
     cmpLede: "Même bibliothèque, coquilles différentes.",
     cmpFocus: "Focus",
     cmpFocusDrop: "LRI → DNG rapide",
@@ -681,7 +681,7 @@ export const STRINGS = {
     dlLinBtn: "Télécharger pour Linux",
     dlNote:
       "Toutes les versions et notes : <a href=\"https://github.com/l16-camera/lri-drop/releases/latest\" data-goatcounter-click=\"releases-page\" data-goatcounter-title=\"Open Releases\">GitHub Releases</a>. Le pull depuis un L16 demande <a href=\"https://developer.android.com/tools/releases/platform-tools\">adb</a> dans le PATH. Compiler depuis les sources ? Voir plus bas.",
-    ctaTitle: "Clone, lier luminat, lancer.",
+    ctaTitle: "Clone, lier lightmotiv, lancer.",
     ctaP: "Rust, Node 20+, WebView de la plateforme. <code>adb</code> pour la caméra.",
     footMuted: "Cette page est une démo statique GitHub Pages — pas le binaire natif.",
   },

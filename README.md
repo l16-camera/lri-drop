@@ -91,9 +91,9 @@ Workflow: [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 Camera pull cache (macOS): `~/Library/Caches/lri-drop/camera/` (platform cache dirs elsewhere).
 
-## Relation to Luminat app
+## Relation to Lightmotiv
 
-| | **LRI Drop** (this repo) | **Luminat** (`luminat` / `lumen`) |
+| | **LRI Drop** (this repo) | **Lightmotiv** (`lightmotiv` / `lumen`) |
 | --- | --- | --- |
 | Focus | Fast LRI → DNG | Full desktop “own Lumen” |
 | Fusion | — | libcp quality render |
