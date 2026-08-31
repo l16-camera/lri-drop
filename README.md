@@ -9,13 +9,13 @@ Desktop **Tauri 2 + Svelte 5** converter for **Light L16**: drop `.lri` captures
 
 One L16 shutter is a multi-camera pack (up to **16 optical modules** in A/B/C banks). LRI Drop unpacks those separate sensor frames — it does not invent extra copies.
 
-Depends on the **[luminat](https://github.com/isamarin/luminat)** crate `light` (LRI parse/extract). Brand chrome uses **[circahue](https://github.com/isamarin/circahue)** (`@igrs/circahue`) for a living circadian accent.
+Depends on the **[luminat](https://github.com/l16-camera/lightmotiv)** crate `light` (LRI parse/extract). Brand chrome uses **[circahue](https://github.com/isamarin/circahue)** (`@igrs/circahue`) for a living circadian accent.
 
 ## Setup
 
 ```bash
 # 1) luminat monorepo (provides `light`)
-git clone https://github.com/isamarin/luminat.git ~/IGRS/luminat
+git clone https://github.com/l16-camera/lightmotiv.git ~/IGRS/luminat
 # or: export LUMINAT_PATH=/path/to/luminat
 
 # 2) link into this repo

@@ -20,7 +20,7 @@ fi
 
 if [[ -z "$SRC" || ! -d "$SRC/light" ]]; then
   echo "luminat not found. Clone it and set LUMINAT_PATH:"
-  echo "  git clone https://github.com/isamarin/luminat.git"
+  echo "  git clone https://github.com/l16-camera/lightmotiv.git"
   echo "  export LUMINAT_PATH=/path/to/luminat"
   echo "  ./scripts/link-luminat.sh"
   exit 1
