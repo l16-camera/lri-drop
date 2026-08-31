@@ -21,7 +21,7 @@ jobs:
     name: Frontend · lint & build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-node@v4
         with:
@@ -50,10 +50,10 @@ jobs:
     runs-on: macos-latest
     needs: [frontend]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Checkout luminat (light crate)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: l16-camera/lightmotiv
           path: vendor/luminat
@@ -108,10 +108,10 @@ jobs:
             artifact: lri-drop-linux-x64
             binary: target/release/lri-drop
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Checkout luminat (light crate)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: l16-camera/lightmotiv
           path: vendor/luminat
@@ -299,9 +299,9 @@ jobs:
             os: ubuntu-latest
             args: -- --bundles deb
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           repository: l16-camera/lightmotiv
           path: vendor/luminat
