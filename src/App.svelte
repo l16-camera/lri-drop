@@ -624,7 +624,7 @@
   </section>
 
   <footer class="foot" in:fade={{ duration: 500, delay: 150 }}>
-    luminat · isamarin × BLMK
+    luminat · isamarin × IGRS
   </footer>
 </main>
 

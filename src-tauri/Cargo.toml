@@ -2,7 +2,7 @@
 name = "lri-drop"
 version.workspace = true
 edition.workspace = true
-description = "Drag-and-drop LRI → DNG converter — isamarin × BLMK"
+description = "Drag-and-drop LRI → DNG converter — isamarin × IGRS"
 
 [lib]
 name = "lri_drop_lib"

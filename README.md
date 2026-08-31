@@ -103,4 +103,13 @@ Same `light` library; different product shells.
 
 ## License
 
-Same spirit as luminat / open L16 community tooling — isamarin × BLMK.
+LRI Drop's own code — Tauri shell, Svelte interface, DNG export queue, adb
+camera pull, landing page under `docs/` — is licensed under either
+[Apache-2.0](LICENSE-APACHE) or [MIT](LICENSE-MIT), at your option.
+
+Released binaries also contain the `.lri` parser inherited from
+[gennyble/lri-rs](https://github.com/gennyble/lri-rs): `lri-rs` under ISC
+(© 2023 gennyble \<gen@nyble.dev\>) and `lri-proto` under MIT (© 2021 Daniel
+Lawrence Lu). See [NOTICE](NOTICE).
+
+Contributions are dual licensed the same way unless you say otherwise.

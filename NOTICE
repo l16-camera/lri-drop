@@ -1,0 +1,38 @@
+LRI Drop
+Copyright (c) 2026 Igor Samarin
+
+Licensed under either of
+
+  * Apache License, Version 2.0 ...... LICENSE-APACHE
+  * MIT license ...................... LICENSE-MIT
+
+at your option. This covers the application's own code: the Tauri shell, the
+Svelte interface, the DNG export queue, the adb camera pull, and the landing
+page under `docs/`.
+
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion in this work by you, as defined in the Apache-2.0 license, shall
+be dual licensed as above, without any additional terms or conditions.
+
+
+BUNDLED WORK
+============
+
+LRI Drop links the `light` crate from the lightmotiv workspace, which is a fork
+of lri-rs by gennyble:
+
+    https://github.com/gennyble/lri-rs
+
+All `.lri` parsing in this application — the container format and the Protobuf
+metadata inside it — comes from that work. Released binaries of LRI Drop
+therefore contain code under the following terms:
+
+    lri-rs           ISC License, Copyright 2023 gennyble <gen@nyble.dev>
+    lri-proto        MIT License, Copyright (c) 2021 Daniel Lawrence Lu
+
+`lri-proto` originates with dllu/lri-rs: https://github.com/dllu/lri-rs
+
+Both licenses are permissive and both require their copyright notice and
+permission notice to travel with the software, including in binary form. The
+full texts live in the LICENSE file of the corresponding directory in the
+lightmotiv workspace and are reproduced there verbatim.
